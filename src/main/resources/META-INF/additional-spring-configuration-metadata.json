@@ -1,0 +1,22 @@
+{"properties": [
+  {
+    "name": "aws.access-key",
+    "type": "java.lang.String",
+    "description": "AWS Access-Key"
+  },
+  {
+    "name": "aws.secret-key",
+    "type": "java.lang.String",
+    "description": "AWS Secret-Key"
+  },
+  {
+    "name": "mongodb.product.search-index",
+    "type": "java.lang.String",
+    "description": "Index to search products by key"
+  },
+  {
+    "name": "mongodb.product.collection",
+    "type": "java.lang.String",
+    "description": "Collection to hold product info"
+  }
+]}
