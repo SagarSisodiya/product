@@ -40,8 +40,8 @@ public class JWTTokenValidatorFilter extends OncePerRequestFilter{
 						.build()
 						.parseClaimsJws(jwt)
 						.getBody();
-				String username = String.valueOf(claims.get("username"));
-				String authorities = String.valueOf(claims.get("authorities"));
+				String username = String.valueOf(claims.get(Constants.USERNAME));
+				String authorities = String.valueOf(claims.get(Constants.AUTHORITIES));
 				Authentication auth = new UsernamePasswordAuthenticationToken(username, null, 
 						AuthorityUtils.commaSeparatedStringToAuthorityList(authorities));
 				SecurityContextHolder.getContext().setAuthentication(auth);

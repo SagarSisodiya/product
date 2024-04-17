@@ -11,7 +11,9 @@ public class Constants {
 	public static final String ADMIN = "ADMIN";
 	public static final String READ = "READ";
 	public static final String ASTERISK = "*";
-
+	public static final String USERNAME = "username";
+	public static final String AUTHORITIES = "authorities";
+	
 	public static final String DEFAULT_PAGE_NUMBER_VALUE = "0";
 	public static final String DEFAULT_PAGE_SIZE_VALUE = "5";
 	public static final String DEFAULT_CATEGORY = "category";
