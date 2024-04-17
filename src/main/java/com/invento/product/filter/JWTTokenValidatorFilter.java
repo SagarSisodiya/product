@@ -14,7 +14,7 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.invento.product.util.ProductConstants;
+import com.invento.product.util.Constants;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -30,10 +30,10 @@ public class JWTTokenValidatorFilter extends OncePerRequestFilter{
 	
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-		String jwt = request.getHeader(ProductConstants.JWT_HEADER);
+		String jwt = request.getHeader(Constants.JWT_HEADER);
 		if(jwt != null) {
 			try {
-				SecretKey key = Keys.hmacShaKeyFor(ProductConstants.JWT_KEY.getBytes(StandardCharsets.UTF_8)); 
+				SecretKey key = Keys.hmacShaKeyFor(Constants.JWT_KEY.getBytes(StandardCharsets.UTF_8)); 
 				
 				Claims claims = Jwts.parserBuilder()
 						.setSigningKey(key)

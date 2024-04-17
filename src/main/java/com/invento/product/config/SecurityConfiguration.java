@@ -19,7 +19,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 
 import com.invento.product.filter.CsrfCookieFilter;
 import com.invento.product.filter.JWTTokenValidatorFilter;
-import com.invento.product.util.ProductConstants;
+import com.invento.product.util.Constants;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -30,7 +30,7 @@ public class SecurityConfiguration {
 	SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
 		
 		CsrfTokenRequestAttributeHandler handler = new CsrfTokenRequestAttributeHandler();
-		handler.setCsrfRequestAttributeName("_csrf");
+		handler.setCsrfRequestAttributeName(Constants.CSRF_REQUEST_ATTR_NAME);
 		
 		http
 			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -38,11 +38,11 @@ public class SecurityConfiguration {
 				@Override
 				public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
 					CorsConfiguration config = new CorsConfiguration();
-					config.setAllowedMethods(Collections.singletonList("*"));					
-					config.setAllowedOrigins(Arrays.asList("http://localhost:4200","http://localhost:8081"));	//Collections.singletonList("http://localhost:4200")					
-					config.setAllowedHeaders(Collections.singletonList("*"));
+					config.setAllowedMethods(Collections.singletonList(Constants.ASTERISK));					
+					config.setAllowedOrigins(Arrays.asList(Constants.ASTERISK));	
+					config.setAllowedHeaders(Collections.singletonList(Constants.ASTERISK));
 					config.setAllowCredentials(true);
-					config.setExposedHeaders(Arrays.asList(ProductConstants.JWT_HEADER));
+					config.setExposedHeaders(Arrays.asList(Constants.JWT_HEADER));
 					config.setMaxAge(3600L);
 					return config;
 				}
@@ -53,8 +53,9 @@ public class SecurityConfiguration {
 			.addFilterAfter(new CsrfCookieFilter(), UsernamePasswordAuthenticationFilter.class)
 			.addFilterBefore(new JWTTokenValidatorFilter(), UsernamePasswordAuthenticationFilter.class)
 			.authorizeHttpRequests(request -> request
-			.requestMatchers("/swagger-ui.html").permitAll()
-			.requestMatchers("/product/**").authenticated())
+			.requestMatchers("/product/addProduct",
+					"/product/updateProduct","/product/delete").hasRole(Constants.ADMIN)
+			.requestMatchers("/product/**").hasAnyRole(Constants.ADMIN,Constants.READ))
 		.formLogin(Customizer.withDefaults())
 		.httpBasic(Customizer.withDefaults());
 		return http.build();

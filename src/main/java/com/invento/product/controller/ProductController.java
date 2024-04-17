@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.invento.product.dto.ProductDto;
 import com.invento.product.model.Product;
 import com.invento.product.service.ProductService;
+import com.invento.product.util.Constants;
 
 import io.jsonwebtoken.lang.Collections;
 
@@ -35,10 +36,10 @@ public class ProductController {
 
 	@GetMapping("/getProductList")
 	public ResponseEntity<List<Product>> getProductList(
-			@RequestParam(defaultValue = "0") int pageNumber,
-			@RequestParam(defaultValue = "5") int pageSize,
-			@RequestParam(defaultValue = "category") String field,
-      @RequestParam(defaultValue = "DESC") Sort.Direction sortDirection) {
+			@RequestParam(defaultValue = Constants.DEFAULT_PAGE_NUMBER_VALUE) int pageNumber,
+			@RequestParam(defaultValue = Constants.DEFAULT_PAGE_SIZE_VALUE) int pageSize,
+			@RequestParam(defaultValue = Constants.DEFAULT_CATEGORY) String field,
+      @RequestParam(defaultValue = Constants.DESC) Sort.Direction sortDirection) {
 
 		List<Product> products = productService.getProductList(pageNumber, pageSize, field, sortDirection);
 		return (products.size() > 0) 
@@ -58,7 +59,7 @@ public class ProductController {
 	
 	@GetMapping("/search")
 	public ResponseEntity<List<Document>> searchProduct(
-			@RequestParam String keyword, @RequestParam(defaultValue = "5") int limit) {
+			@RequestParam String keyword, @RequestParam(defaultValue = Constants.DEFAULT_PAGE_SIZE_VALUE) int limit) {
 		
 		List<Document> document = productService.searchProduct(keyword, limit);
 		return (Collections.isEmpty(document))

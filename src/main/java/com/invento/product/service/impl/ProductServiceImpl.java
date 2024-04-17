@@ -32,7 +32,7 @@ import com.invento.product.mapper.ProductMapper;
 import com.invento.product.model.Product;
 import com.invento.product.repository.ProductRepo;
 import com.invento.product.service.ProductService;
-import com.invento.product.util.ProductConstants;
+import com.invento.product.util.Constants;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.search.FieldSearchPath;
 
@@ -66,7 +66,7 @@ public class ProductServiceImpl implements ProductService {
 			Pageable pageable = PageRequest.of(pageNumber, pageSize, sortDirection, field);
 			products = productRepo.findAllByDeleted(false, pageable).toList();
 		} catch (Exception e) {
-			log.error("Could not found products.");
+			log.error("Could not find products.");
 		}
 		return products;
 	}
@@ -96,7 +96,7 @@ public class ProductServiceImpl implements ProductService {
 				log.info("Product created. Product Details: {}", product);
 			}
 		} catch (Exception e) {
-			log.error("Product creation failed. Error: ", e);
+			log.error("Product creation failed. Error: {}", e.getMessage());
 		}
 		return created;
 	}
@@ -125,7 +125,7 @@ public class ProductServiceImpl implements ProductService {
 		boolean updated = false;
 		try {
 			if (Strings.isBlank(dto.getId())) {
-				throw new Exception("id is null/empty.");
+				throw new Exception("Id is null/empty.");
 			}
 			Optional<Product> productOp = productRepo.findById(dto.getId());
 			if (productOp.isEmpty()) {
@@ -152,13 +152,13 @@ public class ProductServiceImpl implements ProductService {
 		List<FieldSearchPath> fieldPaths = new ArrayList<>();
 		try {
 			log.info("Searching movies by keyword {} and limit {}", keyword, limit);
-			ProductConstants.SEARCH_PRODUCT_FIELDS
+			Constants.SEARCH_PRODUCT_FIELDS
 				.stream().forEach(f -> fieldPaths.add(fieldPath(f)));
 			Bson searchStage = search(
 					text(fieldPaths, Arrays.asList(keyword)),
 					searchOptions().index(searchProductIdx));
 			Bson projectStage = project(
-					fields(excludeId(), include(ProductConstants.INCLUDE_PRODUCT_FIELDS)));
+					fields(excludeId(), include(Constants.INCLUDE_PRODUCT_FIELDS)));
 			List<Bson> pipeline = List.of(searchStage, projectStage, limit(limit));
 			docs = collection.aggregate(pipeline).into(new ArrayList<>());
 			if (docs.isEmpty()) {
