@@ -19,6 +19,7 @@ public class Constants {
 	public static final String DEFAULT_CATEGORY = "category";
 	public static final String DESC = "DESC";
 	
+	public static final String PRODUCT_COLLECTION = "product";
 	public static final List<String> SEARCH_PRODUCT_FIELDS = 
 			Arrays.asList("category", "spec", "brand");
 	public static final List<String> INCLUDE_PRODUCT_FIELDS = 

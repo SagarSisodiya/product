@@ -13,12 +13,12 @@ public interface ProductService {
 	public List<Product> getProductList(int pageNumber, int pageSize, String field, Sort.Direction sortDirection);
 
 	public Product getProductById(String id);
-
-	public boolean addProduct(ProductDto dto);
-
-	public boolean deleteProductById(String id);
-
-	public boolean updateProduct(ProductDto dto);
 	
 	public List<Document> searchProduct(String keyword, int limit);
+
+	public boolean addProduct(ProductDto dto);
+	
+	public boolean updateProduct(ProductDto dto);
+
+	public boolean deleteProductById(String id);
 }

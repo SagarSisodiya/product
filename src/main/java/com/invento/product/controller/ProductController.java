@@ -1,8 +1,6 @@
 package com.invento.product.controller;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.bson.Document;
 import org.springframework.data.domain.Sort;
@@ -18,11 +16,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.invento.product.dto.ProductDto;
+import com.invento.product.dto.ResponseDto;
 import com.invento.product.model.Product;
 import com.invento.product.service.ProductService;
 import com.invento.product.util.Constants;
-
-import io.jsonwebtoken.lang.Collections;
 
 @RestController
 @RequestMapping("/product")
@@ -53,36 +50,34 @@ public class ProductController {
 		return ResponseEntity.status(HttpStatus.OK).body(productService.getProductById(id));
 	}
 	
-	
 	@GetMapping("/search")
 	public ResponseEntity<List<Document>> searchProduct(
 			@RequestParam String keyword, @RequestParam(defaultValue = Constants.DEFAULT_PAGE_SIZE_VALUE) int limit) {
 		
 		return ResponseEntity.status(HttpStatus.OK).body(productService.searchProduct(keyword, limit));
-				
 	}
 
 	@PostMapping("/addProduct")
-	public ResponseEntity<String> addProduct(@RequestBody ProductDto dto) {
+	public ResponseEntity<ResponseDto> addProduct(@RequestBody ProductDto dto) {
 
 		return productService.addProduct(dto)
-				? ResponseEntity.status(HttpStatus.CREATED).body("Product created successfully.")
-				: ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to create product.");
+				? ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDto("Product created successfully."))
+				: ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("Failed to create product."));
 	}
 	
 	@PutMapping("/updateProduct")
-	public ResponseEntity<String> updateProduct(@RequestBody ProductDto dto) {
+	public ResponseEntity<ResponseDto> updateProduct(@RequestBody ProductDto dto) {
 
 		return productService.updateProduct(dto)
-				? ResponseEntity.status(HttpStatus.OK).body("Product update successfully.")
-				: ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Failed to update product.");
+				? ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("Product updated successfully."))
+				: ResponseEntity.status(HttpStatus.NOT_MODIFIED).body(new ResponseDto("Failed to update product."));
 	}
 
 	@DeleteMapping("/delete")
-	public ResponseEntity<String> deleteProduct(@RequestParam String id) {
+	public ResponseEntity<ResponseDto> deleteProduct(@RequestParam String id) {
 
 		return productService.deleteProductById(id)
-				? ResponseEntity.status(HttpStatus.OK).body("Product deleted successfully.")
-				: ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Failed to delete product.");
+				? ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("Product deleted successfully."))
+				: ResponseEntity.status(HttpStatus.NOT_MODIFIED).body(new ResponseDto("Failed to delete product."));
 	}
 }

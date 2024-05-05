@@ -13,7 +13,6 @@ import org.springframework.web.client.HttpServerErrorException.InternalServerErr
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.invento.product.exception.ErrorResponse;
-import com.invento.product.exception.ProductAlreadyDeletedException;
 import com.invento.product.exception.ProductNotFoundException;
 
 @ControllerAdvice
@@ -27,16 +26,7 @@ public class GlobalExceptionHandler {
 	handleException(ProductNotFoundException ex) {
 		
 		log.error(ex.getMessage());
-		return new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());
-	}
-	
-	@ExceptionHandler(value = ProductAlreadyDeletedException.class)
-	@ResponseStatus(HttpStatus.CONFLICT)
-	public @ResponseBody ErrorResponse
-	handleException(ProductAlreadyDeletedException ex) {
-		
-		log.error(ex.getMessage());
-		return new ErrorResponse(HttpStatus.CONFLICT.value(), ex.getMessage());
+		return new ErrorResponse(ex.getMessage());
 	}
 	
 	@ExceptionHandler(value = MethodArgumentTypeMismatchException.class)
@@ -45,7 +35,7 @@ public class GlobalExceptionHandler {
 	handledException(MethodArgumentTypeMismatchException ex) {
 		
 		log.error(ex.getMessage());
-		return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
+		return new ErrorResponse(ex.getMessage());
 	}
 	
 	@ExceptionHandler(value = BadRequest.class)
@@ -54,7 +44,7 @@ public class GlobalExceptionHandler {
 	handledException(BadRequest ex) {
 		
 		log.error(ex.getMessage());
-		return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
+		return new ErrorResponse(ex.getMessage());
 	}
 	
 	@ExceptionHandler(value = InternalServerError.class)
@@ -63,6 +53,6 @@ public class GlobalExceptionHandler {
 	handleException(InternalServerError ex) {
 		
 		log.error(ex.getMessage());
-		return new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage());
+		return new ErrorResponse(ex.getMessage());
 	}
 }

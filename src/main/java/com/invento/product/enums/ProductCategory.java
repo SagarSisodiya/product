@@ -2,7 +2,6 @@ package com.invento.product.enums;
 
 public enum ProductCategory {
 
-
 	VRAM("vram"),
 	HARD_DRIVE("hard drive"),
 	MOTHER_BOARD("mother board"),
