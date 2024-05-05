@@ -28,7 +28,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.invento.product.dto.ProductDto;
-import com.invento.product.exception.ProductAlreadyDeletedException;
 import com.invento.product.exception.ProductNotFoundException;
 import com.invento.product.mapper.ProductMapper;
 import com.invento.product.model.Product;
@@ -44,9 +43,6 @@ public class ProductServiceImpl implements ProductService {
 	@Value("${mongodb.product.searchIndex}")
 	private String searchProductIdx;
 
-	@Value("${mongodb.product.collection}")
-	private String productCollection;
-
 	private ProductRepo productRepo;
 
 	private ProductMapper productMapper;
@@ -56,14 +52,15 @@ public class ProductServiceImpl implements ProductService {
 	private static final Logger log = LoggerFactory.getLogger(ProductServiceImpl.class);
 
 	public ProductServiceImpl(ProductRepo productRep, ProductMapper productMapper, MongoTemplate mongoTemplate) {
+		
 		this.productRepo = productRep;
 		this.productMapper = productMapper;
-		this.collection = mongoTemplate.getCollection("product");
+		this.collection = mongoTemplate.getCollection(Constants.PRODUCT_COLLECTION);
 	}
 
 	@Override
 	public List<Product> getProductList(int pageNumber, int pageSize, String field, Sort.Direction sortDirection) {
-		
+
 		Pageable pageable = PageRequest.of(pageNumber, pageSize, sortDirection, field);
 		return productRepo.findAllByDeleted(false, pageable).toList();
 	}
@@ -72,7 +69,25 @@ public class ProductServiceImpl implements ProductService {
 	public Product getProductById(String id) {
 
 		return productRepo.findByIdAndDeleted(id, false)
-				.orElseThrow(() -> new ProductNotFoundException("No product foud with id: " + id));
+				.orElseThrow(() -> new ProductNotFoundException("No product found with id: " + id));
+	}
+	
+	@Override
+	public List<Document> searchProduct(String keyword, int limit) {
+
+		List<Document> docs = null;
+		List<FieldSearchPath> fieldPaths = new ArrayList<>();
+		log.info("Searching movies by keyword {} and limit {}", keyword, limit);
+		Constants.SEARCH_PRODUCT_FIELDS.stream().forEach(f -> fieldPaths.add(fieldPath(f)));
+		Bson searchStage = search(text(fieldPaths, Arrays.asList(keyword)), searchOptions().index(searchProductIdx));
+		Bson projectStage = project(fields(excludeId(), include(Constants.INCLUDE_PRODUCT_FIELDS)));
+		List<Bson> pipeline = List.of(searchStage, projectStage, limit(limit));
+		docs = collection.aggregate(pipeline).into(new ArrayList<>());
+
+		if (docs.isEmpty()) {
+			throw new ProductNotFoundException("No product found");
+		}
+		return docs;
 	}
 
 	@Override
@@ -88,31 +103,14 @@ public class ProductServiceImpl implements ProductService {
 		}
 		return created;
 	}
-
-	@Override
-	@Transactional
-	public boolean deleteProductById(String id) {
-
-		boolean deleted = false;
-		Product product = productRepo.findById(id)
-				.orElseThrow(() -> new ProductNotFoundException("No product found with id: " + id));
-		product.setDeleted(true);
-		productRepo.save(product);
-		deleted = true;
-		return deleted;
-	}
-
+	
 	@Override
 	@Transactional
 	public boolean updateProduct(ProductDto dto) {
 
 		boolean updated = false;
-		Product product = productRepo.findById(dto.getId())
+		Product product = productRepo.findByIdAndDeleted(dto.getId(), false)
 				.orElseThrow(() -> new ProductNotFoundException("No product found with id: " + dto.getId()));
-
-		if (product.isDeleted()) {
-			throw new ProductAlreadyDeletedException("Product was deleted. Enable to update.");
-		}
 		product = productMapper.dtoToProduct(dto);
 		productRepo.save(product);
 		updated = true;
@@ -120,20 +118,15 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public List<Document> searchProduct(String keyword, int limit) {
+	@Transactional
+	public boolean deleteProductById(String id) {
 
-		List<Document> docs = null;
-		List<FieldSearchPath> fieldPaths = new ArrayList<>();
-		log.info("Searching movies by keyword {} and limit {}", keyword, limit);
-		Constants.SEARCH_PRODUCT_FIELDS.stream().forEach(f -> fieldPaths.add(fieldPath(f)));
-		Bson searchStage = search(text(fieldPaths, Arrays.asList(keyword)), searchOptions().index(searchProductIdx));
-		Bson projectStage = project(fields(excludeId(), include(Constants.INCLUDE_PRODUCT_FIELDS)));
-		List<Bson> pipeline = List.of(searchStage, projectStage, limit(limit));
-		docs = collection.aggregate(pipeline).into(new ArrayList<>());
-
-		if (docs.isEmpty()) {
-			docs = new ArrayList<>();
-		}
-		return docs;
+		boolean deleted = false;
+		Product product = productRepo.findByIdAndDeleted(id, false)
+				.orElseThrow(() -> new ProductNotFoundException("No product found with id: " + id));
+		product.setDeleted(true);
+		productRepo.save(product);
+		deleted = true;
+		return deleted;
 	}
 }

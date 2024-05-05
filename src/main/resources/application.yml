@@ -6,7 +6,6 @@ spring:
       
 mongodb:
   product:
-    collection: product
     searchIndex: default
 
 server:
