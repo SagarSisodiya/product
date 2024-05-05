@@ -8,7 +8,7 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.invento</groupId>
-	<artifactId>customer</artifactId>
+	<artifactId>product</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>customer</name>
 	<description>Project for managing customer details</description>
