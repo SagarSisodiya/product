@@ -37,6 +37,9 @@ import com.invento.product.util.Constants;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.search.FieldSearchPath;
 
+/**
+ * Service implementation for managing {@link com.invento.product.model.Product}
+ */
 @Service
 public class ProductServiceImpl implements ProductService {
 
@@ -58,6 +61,18 @@ public class ProductServiceImpl implements ProductService {
 		this.collection = mongoTemplate.getCollection(Constants.PRODUCT_COLLECTION);
 	}
 
+	/**
+	 * Get list of products where 'deleted' field value is false
+	 * 
+	 * @param pageNumber : Specific page number in paginated response of all products
+	 * @param pageSize : Number of product objects in each page
+	 * @param field : Field used for sorting in product object
+	 * @param sortDirection {@value ASC/DESC} : Sorting order - {ASC} for ascending and {DESC} for descending
+	 * 
+	 * @return List of products
+	 * 
+	 */
+	
 	@Override
 	public List<Product> getProductList(int pageNumber, int pageSize, String field, Sort.Direction sortDirection) {
 
@@ -65,12 +80,31 @@ public class ProductServiceImpl implements ProductService {
 		return productRepo.findAllByDeleted(false, pageable).toList();
 	}
 
+	/**
+	 * Get product by id where 'deleted' field value is false
+	 * 
+	 * @param id : unique identifier value for specific product object
+	 *  
+	 * @return Product object or throws ProductNotFoundException if object is not found matching the provided id.
+	 */
+	
 	@Override
 	public Product getProductById(String id) {
 
 		return productRepo.findByIdAndDeleted(id, false)
 				.orElseThrow(() -> new ProductNotFoundException("No product found with id: " + id));
 	}
+	
+	/**
+	 * Search products in mongodb database
+	 * 
+	 * @param keyword : String values to be search over the indexed fields in mongodb
+	 * @param limit : Number of objects to be fetched
+	 * 
+	 * @return List of product documents or throws ProductNotFoundException if no document matches
+	 *         the provided keyword/s. 
+	 *  
+	 */
 	
 	@Override
 	public List<Document> searchProduct(String keyword, int limit) {
@@ -89,6 +123,14 @@ public class ProductServiceImpl implements ProductService {
 		}
 		return docs;
 	}
+	
+	/**
+	 * Add new product
+	 * 
+	 * @param dto: Request object containing product details to be stored
+	 * 
+	 * @return true if product is saved successfully or else returns false.
+	 */
 
 	@Override
 	@Transactional
@@ -104,6 +146,15 @@ public class ProductServiceImpl implements ProductService {
 		return created;
 	}
 	
+	/**
+	 * Update existing product where id matches the provided id in dto.
+	 * 
+	 * @param dto : Request object containing product details to be updated.
+	 * 
+	 * @return true if product details updated successfully else returns false,
+	 *         or throws ProductNotFoundException if no product matches the provided id in dto.
+	 */
+	
 	@Override
 	@Transactional
 	public boolean updateProduct(ProductDto dto) {
@@ -116,6 +167,15 @@ public class ProductServiceImpl implements ProductService {
 		updated = true;
 		return updated;
 	}
+	
+	/**
+	 * Soft delete product by setting 'deleted' field value of product to true, that matches the provided id.
+	 * 
+	 * @param id : unique identifier value for specific product object
+	 * 
+	 * @return true if the product is delete successfully else returns false, 
+	 *         or throw ProductNotFoundException if no product matches the provided id.
+	 */
 
 	@Override
 	@Transactional
