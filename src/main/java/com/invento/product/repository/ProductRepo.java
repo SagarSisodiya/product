@@ -9,6 +9,10 @@ import org.springframework.stereotype.Repository;
 
 import com.invento.product.model.Product;
 
+/**
+ * Repository for managing {@link com.invento.product.model.Product}
+ */
+
 @Repository
 public interface ProductRepo extends MongoRepository<Product, String>{
 
