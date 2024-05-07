@@ -13,8 +13,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class Product extends TimestampLogging {
 
 	@Id
