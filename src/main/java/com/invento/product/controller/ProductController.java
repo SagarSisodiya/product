@@ -5,6 +5,7 @@ import java.util.List;
 import org.bson.Document;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +27,7 @@ import com.invento.product.util.Constants;
  */
 
 @RestController
-@RequestMapping("/product")
+@RequestMapping(path="/product", produces= {MediaType.APPLICATION_JSON_VALUE}	)
 public class ProductController {
 
 	private ProductService productService;
