@@ -1,0 +1,26 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+customer,com.invento.product,ProductApplication,5,3,0,0,2,1,1,1,1,1
+customer,com.invento.product.controller,ProductController,101,6,8,0,15,3,10,1,6,1
+customer,com.invento.product.advice,GlobalExceptionHandler,40,7,0,0,8,2,4,2,4,2
+customer,com.invento.product.enums,Brand,0,57,0,0,0,9,0,2,0,2
+customer,com.invento.product.enums,ProductCategory,0,71,0,0,0,11,0,2,0,2
+customer,com.invento.product.util,Constants,40,0,0,0,5,0,2,0,2,0
+customer,com.invento.product.config,SecurityConfiguration,0,104,0,0,0,19,0,7,0,7
+customer,com.invento.product.config,SecurityConfiguration.new CorsConfigurationSource() {...},40,6,0,0,8,1,1,1,1,1
+customer,com.invento.product.config,MongoClientConfig,0,22,0,0,0,5,0,4,0,4
+customer,com.invento.product.filter,JWTTokenValidatorFilter,57,7,2,0,19,2,2,1,1,1
+customer,com.invento.product.filter,CsrfCookieFilter,20,3,2,0,5,1,2,1,1,1
+customer,com.invento.product.dto,TimestampLoggingDto,26,0,0,0,5,0,6,0,6,0
+customer,com.invento.product.dto,ProductDto.ProductDtoBuilder,14,49,0,0,0,1,1,8,1,8
+customer,com.invento.product.dto,ProductDto,272,28,54,0,7,3,43,3,16,3
+customer,com.invento.product.dto,ResponseDto,81,0,14,0,6,0,15,0,8,0
+customer,com.invento.product.model,Product,45,35,0,0,7,4,13,4,13,4
+customer,com.invento.product.model,Product.ProductBuilder,16,56,0,0,0,1,1,9,1,9
+customer,com.invento.product.model,MetaData,56,0,0,0,8,0,12,0,12,0
+customer,com.invento.product.model,TimestampLogging,16,25,0,0,1,6,4,6,4,6
+customer,com.invento.product.service.impl,ProductServiceImpl,97,122,3,1,11,31,7,7,5,7
+customer,com.invento.product.exception,NullRequestObjectException,7,0,0,0,3,0,1,0,1,0
+customer,com.invento.product.exception,ErrorResponse,81,0,14,0,6,0,15,0,8,0
+customer,com.invento.product.exception,ProductNotFoundException,7,0,0,0,3,0,1,0,1,0
+customer,com.invento.product.mapper,ProductMapper,33,3,2,0,9,1,2,1,1,1
+customer,com.invento.product.audit,DatabseAuditing,13,3,2,0,7,1,2,1,1,1

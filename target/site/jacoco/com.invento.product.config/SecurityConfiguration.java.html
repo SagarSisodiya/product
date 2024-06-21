@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SecurityConfiguration.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">customer</a> &gt; <a href="index.source.html" class="el_package">com.invento.product.config</a> &gt; <span class="el_source">SecurityConfiguration.java</span></div><h1>SecurityConfiguration.java</h1><pre class="source lang-java linenums">package com.invento.product.config;
+
+import java.util.Arrays;
+import java.util.Collections;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+
+import com.invento.product.filter.CsrfCookieFilter;
+import com.invento.product.filter.JWTTokenValidatorFilter;
+import com.invento.product.util.Constants;
+
+import jakarta.servlet.http.HttpServletRequest;
+
+@Configuration
+<span class="fc" id="L27">public class SecurityConfiguration {</span>
+	
+	@Bean
+	SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+		
+<span class="fc" id="L32">		CsrfTokenRequestAttributeHandler handler = new CsrfTokenRequestAttributeHandler();</span>
+<span class="fc" id="L33">		handler.setCsrfRequestAttributeName(Constants.CSRF_REQUEST_ATTR_NAME);</span>
+		
+<span class="fc" id="L35">		http</span>
+<span class="fc" id="L36">			.sessionManagement(session -&gt; session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))</span>
+<span class="fc" id="L37">			.cors(cors -&gt; cors.configurationSource(new CorsConfigurationSource() {</span>
+				@Override
+				public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+<span class="nc" id="L40">					CorsConfiguration config = new CorsConfiguration();</span>
+<span class="nc" id="L41">					config.setAllowedMethods(Collections.singletonList(Constants.ASTERISK));					</span>
+<span class="nc" id="L42">					config.setAllowedOrigins(Arrays.asList(Constants.ASTERISK));	</span>
+<span class="nc" id="L43">					config.setAllowedHeaders(Collections.singletonList(Constants.ASTERISK));</span>
+<span class="nc" id="L44">					config.setAllowCredentials(true);</span>
+<span class="nc" id="L45">					config.setExposedHeaders(Arrays.asList(Constants.JWT_HEADER));</span>
+<span class="nc" id="L46">					config.setMaxAge(3600L);</span>
+<span class="nc" id="L47">					return config;</span>
+				}
+			}))
+<span class="fc" id="L50">			.csrf(csrf -&gt; csrf</span>
+<span class="fc" id="L51">				.csrfTokenRequestHandler(handler)</span>
+<span class="fc" id="L52">				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))</span>
+<span class="fc" id="L53">			.addFilterAfter(new CsrfCookieFilter(), UsernamePasswordAuthenticationFilter.class)</span>
+<span class="fc" id="L54">			.addFilterBefore(new JWTTokenValidatorFilter(), UsernamePasswordAuthenticationFilter.class)</span>
+<span class="fc" id="L55">			.authorizeHttpRequests(request -&gt; request</span>
+<span class="fc" id="L56">			.requestMatchers(&quot;/product/addProduct&quot;,</span>
+<span class="fc" id="L57">					&quot;/product/updateProduct&quot;,&quot;/product/delete&quot;).hasRole(Constants.ADMIN)</span>
+<span class="fc" id="L58">			.requestMatchers(&quot;/product/**&quot;).hasAnyRole(Constants.ADMIN,Constants.READ))</span>
+<span class="fc" id="L59">		.formLogin(Customizer.withDefaults())</span>
+<span class="fc" id="L60">		.httpBasic(Customizer.withDefaults());</span>
+<span class="fc" id="L61">		return http.build();</span>
+	}
+	
+	@Bean 
+	PasswordEncoder passwordEncoder() {
+<span class="fc" id="L66">		return new BCryptPasswordEncoder();</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

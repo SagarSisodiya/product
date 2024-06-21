@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GlobalExceptionHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">customer</a> &gt; <a href="index.source.html" class="el_package">com.invento.product.advice</a> &gt; <span class="el_source">GlobalExceptionHandler.java</span></div><h1>GlobalExceptionHandler.java</h1><pre class="source lang-java linenums">package com.invento.product.advice;
+
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.client.HttpClientErrorException.BadRequest;
+import org.springframework.web.client.HttpServerErrorException.InternalServerError;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
+import com.invento.product.exception.ErrorResponse;
+import com.invento.product.exception.ProductNotFoundException;
+
+@ControllerAdvice
+<span class="fc" id="L19">public class GlobalExceptionHandler {</span>
+
+<span class="fc" id="L21">	private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);</span>
+	
+	@ExceptionHandler(value = ProductNotFoundException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	public @ResponseBody ErrorResponse
+	handleException(ProductNotFoundException ex) {
+		
+<span class="nc" id="L28">		log.error(ex.getMessage());</span>
+<span class="nc" id="L29">		return new ErrorResponse(ex.getMessage());</span>
+	}
+	
+	@ExceptionHandler(value = MethodArgumentTypeMismatchException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public @ResponseBody ErrorResponse
+	handledException(MethodArgumentTypeMismatchException ex) {
+		
+<span class="nc" id="L37">		log.error(ex.getMessage());</span>
+<span class="nc" id="L38">		return new ErrorResponse(ex.getMessage());</span>
+	}
+	
+	@ExceptionHandler(value = BadRequest.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public @ResponseBody ErrorResponse
+	handledException(BadRequest ex) {
+		
+<span class="nc" id="L46">		log.error(ex.getMessage());</span>
+<span class="nc" id="L47">		return new ErrorResponse(ex.getMessage());</span>
+	}
+	
+	@ExceptionHandler(value = InternalServerError.class)
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	public @ResponseBody ErrorResponse
+	handleException(InternalServerError ex) {
+		
+<span class="nc" id="L55">		log.error(ex.getMessage());</span>
+<span class="nc" id="L56">		return new ErrorResponse(ex.getMessage());</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
