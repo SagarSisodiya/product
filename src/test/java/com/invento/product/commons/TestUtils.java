@@ -28,7 +28,8 @@ public class TestUtils {
 	
 	public List<Product> getProducts() {
 				
-		Product product1 =	Product.builder()
+		Product product1 =	
+				Product.builder()
 				.id("6639dd31e5b7490f597ee80f")
 				.category(ProductCategory.CABINETS)
 				.brand(Brand.CORSAIR)
@@ -38,7 +39,8 @@ public class TestUtils {
 				.imagename("corsaircabzeus.jpg")
 				.build();
 		
-		Product product2 =	Product.builder()
+		Product product2 =	
+				Product.builder()
 				.id("667512965128ae4fdd899203")
 				.category(ProductCategory.CPU)
 				.brand(Brand.INTEL)
@@ -48,7 +50,8 @@ public class TestUtils {
 				.imagename("inteli9.jpg")
 				.build();
 		
-		Product product3 =	Product.builder()
+		Product product3 =	
+				Product.builder()
 				.id("667512a2b880f56a1f49b0ba")
 				.category(ProductCategory.HARD_DRIVE)
 				.brand(Brand.SEAGATE)
