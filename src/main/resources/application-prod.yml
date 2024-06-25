@@ -1,5 +1,5 @@
 spring:
-  cloud:
-    config:
-      uri: http://localhost:8071/
-      profile: prod
+  config:
+    import: configserver:http://localhost:8071/
+    activate:
+      on-profile: prod
