@@ -3,6 +3,7 @@ package com.invento.product.controller;
 import java.util.List;
 
 import org.bson.Document;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -29,6 +30,9 @@ import com.invento.product.util.Constants;
 @RestController
 @RequestMapping(path="/product", produces= {MediaType.APPLICATION_JSON_VALUE}	)
 public class ProductController {
+	
+	@Value("${spring.data.mongodb.database}")
+	private String database;
 
 	private ProductService productService;
 
