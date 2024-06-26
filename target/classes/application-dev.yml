@@ -1,5 +1,0 @@
-spring:
-  config:
-    import: configserver:http://localhost:8071/
-    activate:
-      on-profile: dev
