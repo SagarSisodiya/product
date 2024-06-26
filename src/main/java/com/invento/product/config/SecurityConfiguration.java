@@ -51,8 +51,9 @@ public class SecurityConfiguration {
 				.csrfTokenRequestHandler(handler)
 				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
 			.addFilterAfter(new CsrfCookieFilter(), UsernamePasswordAuthenticationFilter.class)
-			.addFilterBefore(new JWTTokenValidatorFilter(), UsernamePasswordAuthenticationFilter.class)
+			//.addFilterBefore(new JWTTokenValidatorFilter(), UsernamePasswordAuthenticationFilter.class)
 			.authorizeHttpRequests(request -> request
+			.requestMatchers("/product/getDatabaseName").permitAll()
 			.requestMatchers("/product/addProduct",
 					"/product/updateProduct","/product/delete").hasRole(Constants.ADMIN)
 			.requestMatchers("/product/**").hasAnyRole(Constants.ADMIN,Constants.READ))
