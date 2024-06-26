@@ -47,7 +47,6 @@ public class ProductController {
 	 * @return ResponseEntity object with status code 200 {OK} and body with list of Product objects,
 	 *         or with status code 404 {NOT FOUND} and body with and empty list.
 	 */
-	
 	@GetMapping("/getProductList")
 	public ResponseEntity<List<Product>> getProductList(
 			@RequestParam(defaultValue = Constants.DEFAULT_PAGE_NUMBER_VALUE) int pageNumber,
@@ -70,7 +69,6 @@ public class ProductController {
 	 *         or throws ProductNotFoundException with status code 404 {NOT FOUND} and an error message
 	 *         if object is not found matching the provided id.
 	 */
-	
 	@GetMapping("/getProductById")
 	public ResponseEntity<Product> getProductById(@RequestParam String id) {
 
@@ -87,7 +85,6 @@ public class ProductController {
 	 *         or throws ProductNotFoundException with status code 404 {NOT FOUND} and an error message
 	 *         if object is not found matching the provided keyword/s.
 	 */         
-	
 	@GetMapping("/search")
 	public ResponseEntity<List<Document>> searchProduct(
 			@RequestParam String keyword, @RequestParam(defaultValue = Constants.DEFAULT_PAGE_SIZE_VALUE) int limit) {
@@ -103,7 +100,6 @@ public class ProductController {
 	 * @return ResponseEntity object of type ResponseDto with status 201 {Created} and a success message,
 	 *         or with status 400 {Bad Request} and a failure message.
 	 */
-	
 	@PostMapping("/addProduct")
 	public ResponseEntity<ResponseDto> addProduct(@RequestBody ProductDto dto) {
 
@@ -122,7 +118,6 @@ public class ProductController {
 	 *         or throws ProductNotFoundException with status code 404 {NOT FOUND} and an error message
 	 *         if object is not found matching the provided id in dto.
 	 */
-	
 	@PutMapping("/updateProduct")
 	public ResponseEntity<ResponseDto> updateProduct(@RequestBody ProductDto dto) {
 
@@ -141,7 +136,6 @@ public class ProductController {
 	 *         or throws ProductNotFoundException with status code 404 {NOT FOUND} and an error message
 	 *         if object is not found matching the provided id.
 	 */
-
 	@DeleteMapping("/delete")
 	public ResponseEntity<ResponseDto> deleteProduct(@RequestParam String id) {
 
