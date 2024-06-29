@@ -121,7 +121,6 @@ public class ProductController {
 	@PutMapping("/updateProduct")
 	public ResponseEntity<ResponseDto> updateProduct(@RequestBody ProductDto dto) {
 
-	    
 		return productService.updateProduct(dto)
 				? ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("Product updated successfully."))
 				: ResponseEntity.status(HttpStatus.NOT_MODIFIED).body(new ResponseDto("Failed to update product."));
