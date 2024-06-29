@@ -7,6 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +22,12 @@ import com.invento.product.dto.ResponseDto;
 import com.invento.product.model.Product;
 import com.invento.product.service.ProductService;
 import com.invento.product.util.Constants;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Rest controller for managing {@link com.invento.product.model.Product}.
@@ -121,6 +128,7 @@ public class ProductController {
 	@PutMapping("/updateProduct")
 	public ResponseEntity<ResponseDto> updateProduct(@RequestBody ProductDto dto) {
 
+	    
 		return productService.updateProduct(dto)
 				? ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("Product updated successfully."))
 				: ResponseEntity.status(HttpStatus.NOT_MODIFIED).body(new ResponseDto("Failed to update product."));

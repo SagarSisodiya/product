@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: product
+    
+springdoc:
+  swagger-ui:
+    csrf:
+      enabled: true
+
+server:
+  port: 8081
