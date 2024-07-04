@@ -3,6 +3,7 @@ package com.invento.product.commons;
 import java.util.Arrays;
 import java.util.List;
 
+import org.bson.Document;
 import org.springframework.stereotype.Component;
 
 import com.invento.product.dto.ProductDto;

@@ -31,5 +31,4 @@ public class MongoClientConfig extends AbstractMongoClientConfiguration {
 		log.info("Creating MongoClientSettings for mongoClient and MongoTemplate");
 		return MongoClientSettings.builder().applyConnectionString(new ConnectionString(connectionString)).build();
 	}
-
 }

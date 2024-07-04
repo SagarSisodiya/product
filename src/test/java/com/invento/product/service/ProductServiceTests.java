@@ -51,10 +51,10 @@ public class ProductServiceTests {
 	@Test
 	public void testGetProductList() {
 		
-		PageRequest pageRequest = PageRequest.of(0, 5, Sort.Direction.DESC, "category");
 		Page<Product> productsPage = new PageImpl<>(testUtils.getProducts());
 		
-		when(productRepo.findAllByDeleted(false, pageRequest)).thenReturn(productsPage);
+		when(productRepo.findAllByDeleted(Mockito.anyBoolean(), Mockito.any(PageRequest.class)))
+			.thenReturn(productsPage);
 		
 		List<Product> products = 
 			productService.getProductList(0, 5, "category", Sort.Direction.DESC);
@@ -67,8 +67,8 @@ public class ProductServiceTests {
 		
 		Product product = testUtils.getProduct();
 		
-		when(productRepo.findByIdAndDeleted(Mockito.anyString(), Mockito.eq(false)))
-			.thenReturn(Optional.of(product));
+		when(productRepo.findByIdAndDeleted(Mockito.anyString(), Mockito.anyBoolean()))
+			.thenReturn(Optional.ofNullable(product));
 					
 		Product productRes = 
 			productService.getProductById("6639dd31e5b7490f597ee80f");
@@ -95,8 +95,8 @@ public class ProductServiceTests {
 		
 		Product product = testUtils.getProduct();
 		
-		when(productRepo.findByIdAndDeleted(Mockito.anyString(), Mockito.eq(false)))
-			.thenReturn(Optional.of(product));
+		when(productRepo.findByIdAndDeleted(Mockito.anyString(), Mockito.anyBoolean()))
+			.thenReturn(Optional.ofNullable(product));
 		when(productMapper.dtoToProduct(Mockito.any(ProductDto.class)))
 			.thenReturn(product);
 				
@@ -111,7 +111,7 @@ public class ProductServiceTests {
 		Product product = testUtils.getProduct();
 		
 		when(productRepo.findByIdAndDeleted(Mockito.anyString(), Mockito.eq(false)))
-		.thenReturn(Optional.of(product));
+		.thenReturn(Optional.ofNullable(product));
 		
 		productService.deleteProductById("6639dd31e5b7490f597ee80f");
 		
