@@ -3,6 +3,8 @@ package com.invento.product.config;
 import java.util.Arrays;
 import java.util.Collections;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -10,6 +12,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
@@ -25,6 +28,10 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @Configuration
 public class SecurityConfiguration {
+	
+    @Autowired
+    @Qualifier("delegatedAuthenticationEntryPoint")
+    AuthenticationEntryPoint authEntryPoint;
 	
 	@Bean
 	SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -54,10 +61,12 @@ public class SecurityConfiguration {
 			.addFilterBefore(new JWTTokenValidatorFilter(), UsernamePasswordAuthenticationFilter.class)
 			.authorizeHttpRequests(request -> request
 			.requestMatchers("/product/addProduct",
-					"/product/updateProduct","/product/delete").hasRole(Constants.ADMIN)
-			.requestMatchers("/product/**").hasAnyRole(Constants.ADMIN,Constants.READ))
+				"/product/updateProduct","/product/delete").hasRole(Constants.ROLE_ADMIN)
+			.requestMatchers("/product/**").hasAnyRole(Constants.ROLE_ADMIN, 
+				Constants.ROLE_READ_ONLY, Constants.ROLE_READ_WRITE))
 		.formLogin(Customizer.withDefaults())
-		.httpBasic(Customizer.withDefaults());
+		.httpBasic(Customizer.withDefaults())
+		.exceptionHandling(ex -> ex.authenticationEntryPoint(authEntryPoint));
 		return http.build();
 	}
 	
