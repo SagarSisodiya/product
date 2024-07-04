@@ -10,17 +10,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
-import com.invento.product.filter.CsrfCookieFilter;
 import com.invento.product.filter.JWTTokenValidatorFilter;
 import com.invento.product.util.Constants;
 
@@ -35,10 +30,7 @@ public class SecurityConfiguration {
 	
 	@Bean
 	SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-		
-		CsrfTokenRequestAttributeHandler handler = new CsrfTokenRequestAttributeHandler();
-		handler.setCsrfRequestAttributeName(Constants.CSRF_REQUEST_ATTR_NAME);
-		
+				
 		http
 			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.cors(cors -> cors.configurationSource(new CorsConfigurationSource() {
@@ -54,24 +46,17 @@ public class SecurityConfiguration {
 					return config;
 				}
 			}))
-			.csrf(csrf -> csrf
-				.csrfTokenRequestHandler(handler)
-				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
-			.addFilterAfter(new CsrfCookieFilter(), UsernamePasswordAuthenticationFilter.class)
+			.csrf(csrf -> csrf.disable())
 			.addFilterBefore(new JWTTokenValidatorFilter(), UsernamePasswordAuthenticationFilter.class)
 			.authorizeHttpRequests(request -> request
 			.requestMatchers("/product/addProduct",
 				"/product/updateProduct","/product/delete").hasRole(Constants.ROLE_ADMIN)
 			.requestMatchers("/product/**").hasAnyRole(Constants.ROLE_ADMIN, 
 				Constants.ROLE_READ_ONLY, Constants.ROLE_READ_WRITE))
+
 		.formLogin(Customizer.withDefaults())
 		.httpBasic(Customizer.withDefaults())
 		.exceptionHandling(ex -> ex.authenticationEntryPoint(authEntryPoint));
 		return http.build();
-	}
-	
-	@Bean 
-	PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
 	}
 }
