@@ -27,7 +27,7 @@ import com.invento.product.util.Constants;
  */
 
 @RestController
-@RequestMapping(path="/product", produces= {MediaType.APPLICATION_JSON_VALUE}	)
+@RequestMapping(path="/product", produces= {MediaType.APPLICATION_JSON_VALUE})
 public class ProductController {
 
 	private ProductService productService;
