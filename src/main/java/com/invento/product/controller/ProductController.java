@@ -121,9 +121,9 @@ public class ProductController {
 	@PutMapping("/updateProduct")
 	public ResponseEntity<ResponseDto> updateProduct(@RequestBody ProductDto dto) {
 
-		return productService.updateProduct(dto)
-				? ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("Product updated successfully."))
-				: ResponseEntity.status(HttpStatus.NOT_MODIFIED).body(new ResponseDto("Failed to update product."));
+		productService.updateProduct(dto);
+		return  ResponseEntity.status(HttpStatus.OK)
+			.body(new ResponseDto("Product updated successfully."));
 	}
 	
 	/**
@@ -139,8 +139,7 @@ public class ProductController {
 	@DeleteMapping("/delete")
 	public ResponseEntity<ResponseDto> deleteProduct(@RequestParam String id) {
 
-		return productService.deleteProductById(id)
-				? ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("Product deleted successfully."))
-				: ResponseEntity.status(HttpStatus.NOT_MODIFIED).body(new ResponseDto("Failed to delete product."));
+		productService.deleteProductById(id);
+		return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("Product deleted successfully."));
 	}
 }

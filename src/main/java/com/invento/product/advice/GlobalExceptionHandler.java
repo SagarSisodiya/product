@@ -18,8 +18,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import com.invento.product.exception.ErrorResponse;
 import com.invento.product.exception.ProductNotFoundException;
 
-import io.jsonwebtoken.JwtException;
-
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 

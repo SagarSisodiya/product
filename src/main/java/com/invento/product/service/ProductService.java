@@ -18,7 +18,7 @@ public interface ProductService {
 
 	public boolean addProduct(ProductDto dto);
 	
-	public boolean updateProduct(ProductDto dto);
+	public void updateProduct(ProductDto dto);
 
-	public boolean deleteProductById(String id);
+	public void deleteProductById(String id);
 }

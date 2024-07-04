@@ -157,15 +157,13 @@ public class ProductServiceImpl implements ProductService {
 	
 	@Override
 	@Transactional
-	public boolean updateProduct(ProductDto dto) {
+	public void updateProduct(ProductDto dto) {
 
-		boolean updated = false;
 		Product product = productRepo.findByIdAndDeleted(dto.getId(), false)
 				.orElseThrow(() -> new ProductNotFoundException("No product found with id: " + dto.getId()));
 		product = productMapper.dtoToProduct(dto);
 		productRepo.save(product);
-		updated = true;
-		return updated;
+		log.info("Product with id {} updated successfully.");
 	}
 	
 	/**
@@ -179,14 +177,12 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	@Transactional
-	public boolean deleteProductById(String id) {
+	public void deleteProductById(String id) {
 
-		boolean deleted = false;
 		Product product = productRepo.findByIdAndDeleted(id, false)
 				.orElseThrow(() -> new ProductNotFoundException("No product found with id: " + id));
 		product.setDeleted(true);
 		productRepo.save(product);
-		deleted = true;
-		return deleted;
+		log.info("Product with id {} deleted successfully.");
 	}
 }

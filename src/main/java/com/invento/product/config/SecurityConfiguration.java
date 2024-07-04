@@ -53,10 +53,9 @@ public class SecurityConfiguration {
 				"/product/updateProduct","/product/delete").hasRole(Constants.ROLE_ADMIN)
 			.requestMatchers("/product/**").hasAnyRole(Constants.ROLE_ADMIN, 
 				Constants.ROLE_READ_ONLY, Constants.ROLE_READ_WRITE))
-
-		.formLogin(Customizer.withDefaults())
-		.httpBasic(Customizer.withDefaults())
-		.exceptionHandling(ex -> ex.authenticationEntryPoint(authEntryPoint));
+			.formLogin(Customizer.withDefaults())
+			.httpBasic(Customizer.withDefaults())
+			.exceptionHandling(ex -> ex.authenticationEntryPoint(authEntryPoint));
 		return http.build();
 	}
 }
