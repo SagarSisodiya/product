@@ -1,4 +1,4 @@
-package com.invento.product.controller;
+package com.invento.product.rest;
 
 import java.util.List;
 
@@ -109,12 +109,11 @@ public class ProductController {
 	}
 	
 	/**
-	 * {@code PUT /updateProduct}
+	 * {@code PUT /updateProduct} : Update an existing object with matching id in request dto 
 	 * 
 	 * @param dto : Request payload containing product details to be updated
 	 * 
 	 * @return ResponseEntity object of type ResponseDto with status 200 {OK} and a success message,
-	 *         or with status 304 {NOT MODIFIED} and a failure message,
 	 *         or throws ProductNotFoundException with status code 404 {NOT FOUND} and an error message
 	 *         if object is not found matching the provided id in dto.
 	 */
@@ -131,8 +130,7 @@ public class ProductController {
 	 * 
 	 * @param id :  unique identifier value for specific product object
 	 * 
-	 * @return ResponseEntity object of type ResponseDto with status 201 {Created} and a success message,
-	 *         or with status 304 {NOT MODIFIED} and a failure message,
+	 * @return ResponseEntity object of type ResponseDto with status 200 {OK} and a success message,
 	 *         or throws ProductNotFoundException with status code 404 {NOT FOUND} and an error message
 	 *         if object is not found matching the provided id.
 	 */

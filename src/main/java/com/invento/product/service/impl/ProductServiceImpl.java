@@ -72,7 +72,6 @@ public class ProductServiceImpl implements ProductService {
 	 * @return List of products
 	 * 
 	 */
-	
 	@Override
 	public List<Product> getProductList(int pageNumber, int pageSize, String field, Sort.Direction sortDirection) {
 
@@ -87,7 +86,6 @@ public class ProductServiceImpl implements ProductService {
 	 *  
 	 * @return Product object or throws ProductNotFoundException if object is not found matching the provided id.
 	 */
-	
 	@Override
 	public Product getProductById(String id) {
 
@@ -99,13 +97,13 @@ public class ProductServiceImpl implements ProductService {
 	 * Search products in mongodb database
 	 * 
 	 * @param keyword : String values to be search over the indexed fields in mongodb
+	 * 
 	 * @param limit : Number of objects to be fetched
 	 * 
 	 * @return List of product documents or throws ProductNotFoundException if no document matches
 	 *         the provided keyword/s. 
 	 *  
 	 */
-	
 	@Override
 	public List<Document> searchProduct(String keyword, int limit) {
 
@@ -131,7 +129,6 @@ public class ProductServiceImpl implements ProductService {
 	 * 
 	 * @return true if product is saved successfully or else returns false.
 	 */
-
 	@Override
 	@Transactional
 	public boolean addProduct(ProductDto dto) {
@@ -154,7 +151,6 @@ public class ProductServiceImpl implements ProductService {
 	 * @return true if product details updated successfully else returns false,
 	 *         or throws ProductNotFoundException if no product matches the provided id in dto.
 	 */
-	
 	@Override
 	@Transactional
 	public void updateProduct(ProductDto dto) {
@@ -174,7 +170,6 @@ public class ProductServiceImpl implements ProductService {
 	 * @return true if the product is delete successfully else returns false, 
 	 *         or throw ProductNotFoundException if no product matches the provided id.
 	 */
-
 	@Override
 	@Transactional
 	public void deleteProductById(String id) {
