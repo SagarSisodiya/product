@@ -1,12 +1,6 @@
 spring:
-  data:
-    mongodb:
-      uri: mongodb+srv://sagarsisodiya8:Mclaren%40720s@cluster0.i2obfip.mongodb.net/
-      database: Sagar   
-      
-mongodb:
-  product:
-    searchIndex: default
+  application:
+    name: product
 
 server:
   port: 8081
