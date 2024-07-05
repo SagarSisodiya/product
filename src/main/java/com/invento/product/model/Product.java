@@ -8,6 +8,7 @@ import com.invento.product.enums.Brand;
 import com.invento.product.enums.ProductCategory;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,6 +18,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Product extends TimestampLogging {
 
 	@Id
