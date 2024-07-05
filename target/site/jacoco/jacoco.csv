@@ -1,0 +1,25 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+product,com.invento.product,ProductApplication,5,3,0,0,2,1,1,1,1,1
+product,com.invento.product.advice,GlobalExceptionHandler,31,17,0,0,6,4,3,3,3,3
+product,com.invento.product.enums,Brand,0,57,0,0,0,9,0,2,0,2
+product,com.invento.product.enums,ProductCategory,0,71,0,0,0,11,0,2,0,2
+product,com.invento.product.util,Constants,3,64,0,0,1,5,1,1,1,1
+product,com.invento.product.config,SecurityConfiguration,0,97,0,0,0,14,0,7,0,7
+product,com.invento.product.config,DelegatedAuthenticationEntryPoint,9,3,0,0,2,1,1,1,1,1
+product,com.invento.product.config,SecurityConfiguration.new CorsConfigurationSource() {...},40,6,0,0,8,1,1,1,1,1
+product,com.invento.product.config,SwaggerConfig,0,48,0,0,0,13,0,3,0,3
+product,com.invento.product.config,MongoClientConfig,0,22,0,0,0,5,0,4,0,4
+product,com.invento.product.filter,JWTTokenValidatorFilter,0,91,2,8,0,21,2,5,0,2
+product,com.invento.product.dto,TimestampLoggingDto,26,0,0,0,5,0,6,0,6,0
+product,com.invento.product.dto,ProductDto.ProductDtoBuilder,14,49,0,0,0,1,1,8,1,8
+product,com.invento.product.dto,ProductDto,0,70,0,0,0,10,0,15,0,15
+product,com.invento.product.dto,ResponseDto,7,9,0,0,2,4,2,2,2,2
+product,com.invento.product.model,Product,30,50,0,0,2,9,8,9,8,9
+product,com.invento.product.model,Product.ProductBuilder,16,56,0,0,0,1,1,9,1,9
+product,com.invento.product.model,TimestampLogging,16,25,0,0,1,6,4,6,4,6
+product,com.invento.product.service.impl,ProductServiceImpl,97,118,3,1,11,29,7,7,5,7
+product,com.invento.product.exception,ErrorResponse,7,9,0,0,2,4,2,2,2,2
+product,com.invento.product.exception,ProductNotFoundException,0,7,0,0,0,3,0,1,0,1
+product,com.invento.product.mapper,ProductMapper,33,3,2,0,9,1,2,1,1,1
+product,com.invento.product.rest,ProductController,0,89,0,4,0,17,0,9,0,7
+product,com.invento.product.audit,DatabaseAuditing,13,3,2,0,7,1,2,1,1,1

@@ -1,0 +1,6 @@
+com\invento\product\util\TestConstants.class
+com\invento\product\filter\JWTTokenValidatorFilterTest.class
+com\invento\product\service\ProductServiceTests.class
+com\invento\product\commons\TestUtils.class
+com\invento\product\controller\ProductControllerTest.class
+com\invento\product\ProductApplicationTests.class

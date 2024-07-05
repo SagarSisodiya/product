@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Constants.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">product</a> &gt; <a href="index.source.html" class="el_package">com.invento.product.util</a> &gt; <span class="el_source">Constants.java</span></div><h1>Constants.java</h1><pre class="source lang-java linenums">package com.invento.product.util;
+
+import java.util.Arrays;
+import java.util.List;
+
+<span class="nc" id="L6">public class Constants {</span>
+
+	public static final String JWT_KEY = &quot;JDIwZGVkaWNhdGVkU2VjcmV0LjAyY3VzdG9tZXIlMjRsb2dpbkBrZXk=&quot;;
+	public static final String JWT_HEADER = &quot;Authorization&quot;;
+	public static final String BEARER = &quot;Bearer&quot;;
+	public static final String CSRF_REQUEST_ATTR_NAME = &quot;_csrf&quot;;
+	public static final String ROLE_ADMIN = &quot;INVENTO_ADMIN&quot;;
+	public static final String ROLE_READ_WRITE = &quot;INVENTO_RW&quot;;
+	public static final String ROLE_READ_ONLY = &quot;INVENTO_RO&quot;;
+	public static final String ASTERISK = &quot;*&quot;;
+	public static final String USERNAME = &quot;username&quot;;
+	public static final String AUTHORITIES = &quot;authorities&quot;;
+
+	public static final String DEFAULT_PAGE_NUMBER_VALUE = &quot;0&quot;;
+	public static final String DEFAULT_PAGE_SIZE_VALUE = &quot;5&quot;;
+	public static final String DEFAULT_CATEGORY = &quot;category&quot;;
+	public static final String DESC = &quot;DESC&quot;;
+	
+	public static final String PRODUCT_COLLECTION = &quot;product&quot;;
+<span class="fc" id="L25">	public static final List&lt;String&gt; SEARCH_PRODUCT_FIELDS = </span>
+<span class="fc" id="L26">			Arrays.asList(&quot;category&quot;, &quot;spec&quot;, &quot;brand&quot;);</span>
+<span class="fc" id="L27">	public static final List&lt;String&gt; INCLUDE_PRODUCT_FIELDS = </span>
+<span class="fc" id="L28">			Arrays.asList(&quot;category&quot;, &quot;spec&quot;, &quot;brand&quot;, &quot;imagename&quot;);</span>
+	
+
+	public static final String SWAGGER_UI = &quot;swagger-ui&quot;;
+	public static final String API_DOCS = &quot;api-docs&quot;;
+<span class="fc" id="L33">	public static final String[] SWAGGER_WHITELIST = {</span>
+			&quot;/swagger-ui/**&quot;,
+			&quot;/swagger-ui.html&quot;,
+			&quot;/v3/api-docs/**&quot;,
+			&quot;/swagger-resources/**&quot;,
+			&quot;/swagger-resources&quot;,
+			&quot;/favicon.ico&quot;
+	};
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

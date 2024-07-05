@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JWTTokenValidatorFilter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">product</a> &gt; <a href="index.source.html" class="el_package">com.invento.product.filter</a> &gt; <span class="el_source">JWTTokenValidatorFilter.java</span></div><h1>JWTTokenValidatorFilter.java</h1><pre class="source lang-java linenums">package com.invento.product.filter;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+
+import javax.crypto.SecretKey;
+
+import org.apache.logging.log4j.util.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.invento.product.util.Constants;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+<span class="fc" id="L29">public class JWTTokenValidatorFilter extends OncePerRequestFilter {</span>
+
+<span class="fc" id="L31">	private final Logger log = LoggerFactory.getLogger(JWTTokenValidatorFilter.class);</span>
+
+	@Override
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+			throws IOException, ServletException {
+
+<span class="fc" id="L37">		String jwt = request.getHeader(Constants.JWT_HEADER);</span>
+<span class="fc" id="L38">		String url = request.getRequestURI();</span>
+
+<span class="pc bpc" id="L40" title="1 of 4 branches missed.">		if (Arrays.asList(Constants.SWAGGER_WHITELIST).contains(url) || url.contains(Constants.SWAGGER_UI)</span>
+<span class="pc bpc" id="L41" title="1 of 2 branches missed.">				|| url.contains(Constants.API_DOCS)) {</span>
+<span class="fc" id="L42">			chain.doFilter(request, response);</span>
+		}
+<span class="fc bfc" id="L44" title="All 2 branches covered.">		if (Strings.isEmpty(jwt)) {</span>
+<span class="fc" id="L45">			throw new JwtException(&quot;Jwt token not found in header.&quot;);</span>
+		}
+<span class="fc bfc" id="L47" title="All 2 branches covered.">		if (jwt.startsWith(Constants.BEARER)) {</span>
+<span class="fc" id="L48">			jwt = jwt.substring(7);</span>
+		}
+<span class="fc" id="L50">		SecretKey key = Keys.hmacShaKeyFor(Constants.JWT_KEY.getBytes(StandardCharsets.UTF_8));</span>
+<span class="fc" id="L51">		Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt).getBody();</span>
+<span class="fc" id="L52">		String username = String.valueOf(claims.get(Constants.USERNAME));</span>
+<span class="fc" id="L53">		String authorities = String.valueOf(claims.get(Constants.AUTHORITIES));</span>
+<span class="fc" id="L54">		Authentication auth = new UsernamePasswordAuthenticationToken(username, null,</span>
+<span class="fc" id="L55">			AuthorityUtils.commaSeparatedStringToAuthorityList(authorities));</span>
+<span class="fc" id="L56">		SecurityContextHolder.getContext().setAuthentication(auth);</span>
+<span class="fc" id="L57">		chain.doFilter(request, response);</span>
+<span class="fc" id="L58">		log.info(&quot;Token validated successfully&quot;);</span>
+<span class="fc" id="L59">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

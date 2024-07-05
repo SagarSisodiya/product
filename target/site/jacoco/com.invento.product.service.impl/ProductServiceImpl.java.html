@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProductServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">product</a> &gt; <a href="index.source.html" class="el_package">com.invento.product.service.impl</a> &gt; <span class="el_source">ProductServiceImpl.java</span></div><h1>ProductServiceImpl.java</h1><pre class="source lang-java linenums">package com.invento.product.service.impl;
+
+import static com.mongodb.client.model.Aggregates.limit;
+import static com.mongodb.client.model.Aggregates.project;
+import static com.mongodb.client.model.Aggregates.search;
+import static com.mongodb.client.model.Projections.excludeId;
+import static com.mongodb.client.model.Projections.fields;
+import static com.mongodb.client.model.Projections.include;
+import static com.mongodb.client.model.search.SearchOperator.text;
+import static com.mongodb.client.model.search.SearchOptions.searchOptions;
+import static com.mongodb.client.model.search.SearchPath.fieldPath;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.logging.log4j.util.Strings;
+import org.bson.Document;
+import org.bson.conversions.Bson;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.invento.product.dto.ProductDto;
+import com.invento.product.exception.ProductNotFoundException;
+import com.invento.product.mapper.ProductMapper;
+import com.invento.product.model.Product;
+import com.invento.product.repository.ProductRepo;
+import com.invento.product.service.ProductService;
+import com.invento.product.util.Constants;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.search.FieldSearchPath;
+
+/**
+ * Service implementation for managing {@link com.invento.product.model.Product}
+ */
+@Service
+public class ProductServiceImpl implements ProductService {
+
+	@Value(&quot;${mongodb.product.searchIndex}&quot;)
+	private String searchProductIdx;
+
+	private ProductRepo productRepo;
+
+	private ProductMapper productMapper;
+
+	private MongoCollection&lt;Document&gt; collection;
+
+<span class="fc" id="L55">	private static final Logger log = LoggerFactory.getLogger(ProductServiceImpl.class);</span>
+
+<span class="fc" id="L57">	public ProductServiceImpl(ProductRepo productRep, ProductMapper productMapper, MongoTemplate mongoTemplate) {</span>
+		
+<span class="fc" id="L59">		this.productRepo = productRep;</span>
+<span class="fc" id="L60">		this.productMapper = productMapper;</span>
+<span class="fc" id="L61">		this.collection = mongoTemplate.getCollection(Constants.PRODUCT_COLLECTION);</span>
+<span class="fc" id="L62">	}</span>
+
+	/**
+	 * Get list of products where 'deleted' field value is false
+	 * 
+	 * @param pageNumber : Specific page number in paginated response of all products
+	 * @param pageSize : Number of product objects in each page
+	 * @param field : Field used for sorting in product object
+	 * @param sortDirection {@value ASC/DESC} : Sorting order - {ASC} for ascending and {DESC} for descending
+	 * 
+	 * @return List of products
+	 * 
+	 */
+	@Override
+	public List&lt;Product&gt; getProductList(int pageNumber, int pageSize, String field, Sort.Direction sortDirection) {
+
+<span class="fc" id="L78">		Pageable pageable = PageRequest.of(pageNumber, pageSize, sortDirection, field);</span>
+<span class="fc" id="L79">		return productRepo.findAllByDeleted(false, pageable).toList();</span>
+	}
+
+	/**
+	 * Get product by id where 'deleted' field value is false
+	 * 
+	 * @param id : unique identifier value for specific product object
+	 *  
+	 * @return Product object or throws ProductNotFoundException if object is not found matching the provided id.
+	 */
+	@Override
+	public Product getProductById(String id) {
+
+<span class="fc" id="L92">		return productRepo.findByIdAndDeleted(id, false)</span>
+<span class="pc" id="L93">				.orElseThrow(() -&gt; new ProductNotFoundException(&quot;No product found with id: &quot; + id));</span>
+	}
+	
+	/**
+	 * Search products in mongodb database
+	 * 
+	 * @param keyword : String values to be search over the indexed fields in mongodb
+	 * 
+	 * @param limit : Number of objects to be fetched
+	 * 
+	 * @return List of product documents or throws ProductNotFoundException if no document matches
+	 *         the provided keyword/s. 
+	 *  
+	 */
+	@Override
+	public List&lt;Document&gt; searchProduct(String keyword, int limit) {
+
+<span class="nc" id="L110">		List&lt;Document&gt; docs = null;</span>
+<span class="nc" id="L111">		List&lt;FieldSearchPath&gt; fieldPaths = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L112">		log.info(&quot;Searching movies by keyword {} and limit {}&quot;, keyword, limit);</span>
+<span class="nc" id="L113">		Constants.SEARCH_PRODUCT_FIELDS.stream().forEach(f -&gt; fieldPaths.add(fieldPath(f)));</span>
+<span class="nc" id="L114">		Bson searchStage = search(text(fieldPaths, Arrays.asList(keyword)), searchOptions().index(searchProductIdx));</span>
+<span class="nc" id="L115">		Bson projectStage = project(fields(excludeId(), include(Constants.INCLUDE_PRODUCT_FIELDS)));</span>
+<span class="nc" id="L116">		List&lt;Bson&gt; pipeline = List.of(searchStage, projectStage, limit(limit));</span>
+<span class="nc" id="L117">		docs = collection.aggregate(pipeline).into(new ArrayList&lt;&gt;());</span>
+
+<span class="nc bnc" id="L119" title="All 2 branches missed.">		if (docs.isEmpty()) {</span>
+<span class="nc" id="L120">			throw new ProductNotFoundException(&quot;No product found&quot;);</span>
+		}
+<span class="nc" id="L122">		return docs;</span>
+	}
+	
+	/**
+	 * Add new product
+	 * 
+	 * @param dto: Request object containing product details to be stored
+	 * 
+	 * @return true if product is saved successfully or else returns false.
+	 */
+	@Override
+	@Transactional
+	public boolean addProduct(ProductDto dto) {
+
+<span class="fc" id="L136">		boolean created = false;</span>
+<span class="fc" id="L137">		Product product = productMapper.dtoToProduct(dto);</span>
+<span class="fc" id="L138">		product = productRepo.save(product);</span>
+<span class="pc bpc" id="L139" title="1 of 2 branches missed.">		if (Strings.isNotBlank(product.getId())) {</span>
+<span class="fc" id="L140">			created = true;</span>
+<span class="fc" id="L141">			log.info(&quot;Product created. Product Details: {}&quot;, product);</span>
+		}
+<span class="fc" id="L143">		return created;</span>
+	}
+	
+	/**
+	 * Update existing product where id matches the provided id in dto.
+	 * 
+	 * @param dto : Request object containing product details to be updated.
+	 * 
+	 * @return true if product details updated successfully else returns false,
+	 *         or throws ProductNotFoundException if no product matches the provided id in dto.
+	 */
+	@Override
+	@Transactional
+	public void updateProduct(ProductDto dto) {
+
+<span class="fc" id="L158">		Product product = productRepo.findByIdAndDeleted(dto.getId(), false)</span>
+<span class="pc" id="L159">				.orElseThrow(() -&gt; new ProductNotFoundException(&quot;No product found with id: &quot; + dto.getId()));</span>
+<span class="fc" id="L160">		product = productMapper.dtoToProduct(dto);</span>
+<span class="fc" id="L161">		productRepo.save(product);</span>
+<span class="fc" id="L162">		log.info(&quot;Product with id {} updated successfully.&quot;);</span>
+<span class="fc" id="L163">	}</span>
+	
+	/**
+	 * Soft delete product by setting 'deleted' field value of product to true, that matches the provided id.
+	 * 
+	 * @param id : unique identifier value for specific product object
+	 * 
+	 * @return true if the product is delete successfully else returns false, 
+	 *         or throw ProductNotFoundException if no product matches the provided id.
+	 */
+	@Override
+	@Transactional
+	public void deleteProductById(String id) {
+
+<span class="fc" id="L177">		Product product = productRepo.findByIdAndDeleted(id, false)</span>
+<span class="pc" id="L178">				.orElseThrow(() -&gt; new ProductNotFoundException(&quot;No product found with id: &quot; + id));</span>
+<span class="fc" id="L179">		product.setDeleted(true);</span>
+<span class="fc" id="L180">		productRepo.save(product);</span>
+<span class="fc" id="L181">		log.info(&quot;Product with id {} deleted successfully.&quot;);</span>
+<span class="fc" id="L182">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
