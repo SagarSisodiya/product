@@ -1,5 +1,7 @@
 package com.invento.product.controller;
 
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -9,6 +11,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bson.Document;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,8 +32,11 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.invento.product.commons.TestUtils;
 import com.invento.product.dto.ProductDto;
+import com.invento.product.exception.ProductNotFoundException;
 import com.invento.product.model.Product;
+import com.invento.product.rest.ProductController;
 import com.invento.product.service.ProductService;
+import com.invento.product.util.TestConstants;
 
 @WebMvcTest(controllers = ProductController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -100,12 +106,32 @@ public class ProductControllerTest {
 		
 		ResultActions response = mockMvc.perform(get("/product/getProductById")
 			.contentType(MediaType.APPLICATION_JSON)
-			.param("id", "6639dd31e5b7490f597ee80f"));
+			.param("id", TestConstants.PRODUCT_ID));
 		
 		response.andExpect(MockMvcResultMatchers.status().isOk())
 			.andExpect(MockMvcResultMatchers.jsonPath(
 				"$.productName", CoreMatchers.is(product.getProductName())));
 		
+	}
+	
+	@Test
+	public void testSearchProduct() throws Exception {
+		
+		List<Document> product = testUtils.getDocuments();
+		
+		when(productService.searchProduct(Mockito.anyString(), Mockito.anyInt()))
+			.thenReturn(testUtils.getDocuments());
+		
+		ResultActions response = mockMvc.perform(get("/product/search")
+			.contentType(MediaType.APPLICATION_JSON)
+			.param("keyword", "INTEL")
+			.param("limit", "5"));
+		
+		response.andExpect(MockMvcResultMatchers.status().isOk())
+			.andExpect(MockMvcResultMatchers.jsonPath(
+				"$.[0].productName", 
+				CoreMatchers.is(product.get(0).get("productName"))));
+			
 	}
 	
 	@Test
@@ -144,8 +170,8 @@ public class ProductControllerTest {
 	public void testUpdateProduct() throws Exception {
 		
 		ProductDto productDto = testUtils.getProductDto();
-				
-		when(productService.updateProduct(Mockito.any())).thenReturn(true);
+		
+		doNothing().when(productService).updateProduct(Mockito.any(ProductDto.class));
 		
 		ResultActions response = mockMvc.perform(put("/product/updateProduct")
 			.contentType(MediaType.APPLICATION_JSON)
@@ -161,25 +187,26 @@ public class ProductControllerTest {
 		
 		ProductDto productDto = testUtils.getProductDto();
 				
-		when(productService.updateProduct(Mockito.any())).thenReturn(false);
+		doThrow(new ProductNotFoundException("No product found with id: " + TestConstants.PRODUCT_ID))
+			.when(productService).updateProduct(Mockito.any());
 		
 		ResultActions response = mockMvc.perform(put("/product/updateProduct")
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(objectMapper.writeValueAsString(productDto)));
 		
-		response.andExpect(MockMvcResultMatchers.status().isNotModified())
+		response.andExpect(MockMvcResultMatchers.status().isNotFound())
 			.andExpect(MockMvcResultMatchers.jsonPath(
-				"$.message", CoreMatchers.is("Failed to update product.")));
+				"$.message", CoreMatchers.is("No product found with id: " + TestConstants.PRODUCT_ID)));
 	}
 	
 	@Test
 	public void testDeleteProduct() throws Exception {
 						
-		when(productService.deleteProductById(Mockito.anyString())).thenReturn(true);
+		doNothing().when(productService).deleteProductById(Mockito.anyString());
 		
 		ResultActions response = mockMvc.perform(delete("/product/delete")
 			.contentType(MediaType.APPLICATION_JSON)
-			.param("id", "6639dd31e5b7490f597ee80f"));
+			.param("id", TestConstants.PRODUCT_ID));
 		
 		response.andExpect(MockMvcResultMatchers.status().isOk())
 			.andExpect(MockMvcResultMatchers.jsonPath(
@@ -189,14 +216,15 @@ public class ProductControllerTest {
 	@Test
 	public void testDeleteProduct_failed() throws Exception {
 						
-		when(productService.deleteProductById(Mockito.anyString())).thenReturn(false);
+		doThrow(new ProductNotFoundException("No product found with id: " + TestConstants.PRODUCT_ID))
+			.when(productService).deleteProductById(Mockito.anyString());
 		
 		ResultActions response = mockMvc.perform(delete("/product/delete")
 			.contentType(MediaType.APPLICATION_JSON)
-			.param("id", "6639dd31e5b7490f597ee80f"));
+			.param("id", TestConstants.PRODUCT_ID));
 		
-		response.andExpect(MockMvcResultMatchers.status().isNotModified())
+		response.andExpect(MockMvcResultMatchers.status().isNotFound())
 			.andExpect(MockMvcResultMatchers.jsonPath(
-				"$.message", CoreMatchers.is("Failed to delete product.")));
+				"$.message", CoreMatchers.is("No product found with id: " + TestConstants.PRODUCT_ID)));
 	}
 }

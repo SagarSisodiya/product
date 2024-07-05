@@ -1,5 +1,9 @@
 package com.invento.product.service;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -21,10 +25,12 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 
 import com.invento.product.commons.TestUtils;
 import com.invento.product.dto.ProductDto;
+import com.invento.product.exception.ProductNotFoundException;
 import com.invento.product.mapper.ProductMapper;
 import com.invento.product.model.Product;
 import com.invento.product.repository.ProductRepo;
 import com.invento.product.service.impl.ProductServiceImpl;
+import com.invento.product.util.TestConstants;
 import com.mongodb.client.MongoCollection;
 
 @ExtendWith(MockitoExtension.class)
@@ -63,7 +69,7 @@ public class ProductServiceTests {
 	}
 		
 	@Test
-	public void testGetProductByIdAndDeltedTrue() {
+	public void testGetProductByIdAndDeltedFalse() {
 		
 		Product product = testUtils.getProduct();
 		
@@ -71,9 +77,22 @@ public class ProductServiceTests {
 			.thenReturn(Optional.ofNullable(product));
 					
 		Product productRes = 
-			productService.getProductById("6639dd31e5b7490f597ee80f");
+			productService.getProductById(TestConstants.PRODUCT_ID);
 		
 		Assertions.assertThat(productRes).isNotNull();
+	}
+	
+	@Test
+	public void testGetProductByIdAndDeltedTrue() {
+		
+		doThrow(new ProductNotFoundException("No product found with id: " + TestConstants.PRODUCT_ID))
+			.when(productRepo).findByIdAndDeleted(Mockito.anyString(), Mockito.anyBoolean());
+		
+		Exception ex = assertThrows(ProductNotFoundException.class, 
+				() -> productService.getProductById(TestConstants.PRODUCT_ID));
+		
+		Assertions.assertThat(ex.getMessage())
+			.isEqualTo("No product found with id: " + TestConstants.PRODUCT_ID);
 	}
 	
 	@Test
@@ -91,7 +110,7 @@ public class ProductServiceTests {
 	}
 	
 	@Test
-	public void testUpdateProduct() {
+	public void testUpdateProductAndDeletedFalse() {
 		
 		Product product = testUtils.getProduct();
 		
@@ -102,19 +121,23 @@ public class ProductServiceTests {
 				
 		productService.updateProduct(testUtils.getProductDto());
 		
-		//Assertions.assertThat(updated).isTrue();
+		verify(productRepo, times(1)).findByIdAndDeleted(
+				Mockito.anyString(), Mockito.anyBoolean());
+		verify(productMapper, times(1)).dtoToProduct(Mockito.any(ProductDto.class));
+		verify(productRepo, times(1)).save(Mockito.any(Product.class));
 	}
 	
 	@Test
-	public void testDeleteProductById() {
+	public void testDeleteProductByIdAndDeletedFalse() {
 		
 		Product product = testUtils.getProduct();
 		
 		when(productRepo.findByIdAndDeleted(Mockito.anyString(), Mockito.eq(false)))
 		.thenReturn(Optional.ofNullable(product));
 		
-		productService.deleteProductById("6639dd31e5b7490f597ee80f");
+		productService.deleteProductById(TestConstants.PRODUCT_ID);
 		
-		//Assertions.assertThat(deleted).isTrue();
+		verify(productRepo,times(1)).findByIdAndDeleted(Mockito.anyString(), Mockito.eq(false));
+		verify(productRepo, times(1)).save(Mockito.any(Product.class));
 	}
 }
