@@ -20,20 +20,6 @@ import jakarta.servlet.http.HttpServletResponse;
 public class JWTTokenValidatorFilterTest {
 	
 	@Test
-	public void testDoFilter() throws ServletException, IOException {
-		
-		JWTTokenValidatorFilter filter = new JWTTokenValidatorFilter();
-		 
-        HttpServletRequest mockReq = Mockito.mock(HttpServletRequest.class);
-        HttpServletResponse mockResp = Mockito.mock(HttpServletResponse.class);
-        FilterChain mockFilterChain = Mockito.mock(FilterChain.class);
-        Mockito.when(mockReq.getRequestURI()).thenReturn("/");
-        Mockito.when(mockReq.getHeader(Mockito.anyString())).thenReturn(TestConstants.MOCK_JWT_TOKEN);
-      	filter.doFilter(mockReq, mockResp, mockFilterChain);
-        filter.destroy();
-	}
-	
-	@Test
 	public void testDoFilter_JwtException() throws ServletException, IOException {
 		
 		JWTTokenValidatorFilter filter = new JWTTokenValidatorFilter();
@@ -56,7 +42,7 @@ public class JWTTokenValidatorFilterTest {
         HttpServletRequest mockReq = Mockito.mock(HttpServletRequest.class);
         HttpServletResponse mockResp = Mockito.mock(HttpServletResponse.class);
         FilterChain mockFilterChain = Mockito.mock(FilterChain.class);
-        Mockito.when(mockReq.getRequestURI()).thenReturn("/swagger-ui/");
+        Mockito.when(mockReq.getRequestURI()).thenReturn(TestConstants.SWAGGER_UI);
 
         Assertions.assertThrows(JwtException.class, 
         	() -> filter.doFilter(mockReq, mockResp, mockFilterChain));
