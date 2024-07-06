@@ -1,4 +1,4 @@
-package com.invento.product.commons;
+package com.invento.product.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;

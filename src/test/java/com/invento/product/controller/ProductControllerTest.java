@@ -30,13 +30,13 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.invento.product.commons.TestUtils;
 import com.invento.product.dto.ProductDto;
 import com.invento.product.exception.ProductNotFoundException;
 import com.invento.product.model.Product;
 import com.invento.product.rest.ProductController;
 import com.invento.product.service.ProductService;
 import com.invento.product.util.TestConstants;
+import com.invento.product.util.TestUtils;
 
 @WebMvcTest(controllers = ProductController.class)
 @AutoConfigureMockMvc(addFilters = false)
