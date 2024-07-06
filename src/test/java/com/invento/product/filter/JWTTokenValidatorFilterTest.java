@@ -43,9 +43,8 @@ public class JWTTokenValidatorFilterTest {
         HttpServletResponse mockResp = Mockito.mock(HttpServletResponse.class);
         FilterChain mockFilterChain = Mockito.mock(FilterChain.class);
         Mockito.when(mockReq.getRequestURI()).thenReturn(TestConstants.SWAGGER_UI);
-
-        Assertions.assertThrows(JwtException.class, 
-        	() -> filter.doFilter(mockReq, mockResp, mockFilterChain));
+ 
+      	filter.doFilter(mockReq, mockResp, mockFilterChain);
         filter.destroy();
 	}
 	

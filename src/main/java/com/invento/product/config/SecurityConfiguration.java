@@ -49,6 +49,7 @@ public class SecurityConfiguration {
 			.csrf(csrf -> csrf.disable())
 			.addFilterBefore(new JWTTokenValidatorFilter(), UsernamePasswordAuthenticationFilter.class)
 			.authorizeHttpRequests(request -> request
+			.requestMatchers(Constants.SWAGGER_WHITELIST).permitAll()
 			.requestMatchers("/product/addProduct",
 				"/product/updateProduct","/product/delete").hasRole(Constants.ROLE_ADMIN)
 			.requestMatchers("/product/**").hasAnyRole(Constants.ROLE_ADMIN, 
