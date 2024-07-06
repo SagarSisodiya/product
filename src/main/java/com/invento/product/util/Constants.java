@@ -25,7 +25,7 @@ public class Constants {
 	public static final List<String> SEARCH_PRODUCT_FIELDS = 
 			Arrays.asList("category", "spec", "brand");
 	public static final List<String> INCLUDE_PRODUCT_FIELDS = 
-			Arrays.asList("category", "spec", "brand", "imagename");
+			Arrays.asList("category", "spec", "brand", "productName", "imagename");
 	
 
 	public static final String SWAGGER_UI = "swagger-ui";

@@ -36,25 +36,26 @@ public class JWTTokenValidatorFilter extends OncePerRequestFilter {
 
 		String jwt = request.getHeader(Constants.JWT_HEADER);
 		String url = request.getRequestURI();
-
+		
 		if (Arrays.asList(Constants.SWAGGER_WHITELIST).contains(url) || url.contains(Constants.SWAGGER_UI)
 				|| url.contains(Constants.API_DOCS)) {
 			chain.doFilter(request, response);
+		} else {
+			if (Strings.isEmpty(jwt)) {
+				throw new JwtException("Jwt token not found in header.");
+			}
+			if (jwt.startsWith(Constants.BEARER)) {
+				jwt = jwt.substring(7);
+			}
+			SecretKey key = Keys.hmacShaKeyFor(Constants.JWT_KEY.getBytes(StandardCharsets.UTF_8));
+			Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt).getBody();
+			String username = String.valueOf(claims.get(Constants.USERNAME));
+			String authorities = String.valueOf(claims.get(Constants.AUTHORITIES));
+			Authentication auth = new UsernamePasswordAuthenticationToken(username, null,
+					AuthorityUtils.commaSeparatedStringToAuthorityList(authorities));
+			SecurityContextHolder.getContext().setAuthentication(auth);
+			chain.doFilter(request, response);
+			log.info("Token validated successfully");
 		}
-		if (Strings.isEmpty(jwt)) {
-			throw new JwtException("Jwt token not found in header.");
-		}
-		if (jwt.startsWith(Constants.BEARER)) {
-			jwt = jwt.substring(7);
-		}
-		SecretKey key = Keys.hmacShaKeyFor(Constants.JWT_KEY.getBytes(StandardCharsets.UTF_8));
-		Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt).getBody();
-		String username = String.valueOf(claims.get(Constants.USERNAME));
-		String authorities = String.valueOf(claims.get(Constants.AUTHORITIES));
-		Authentication auth = new UsernamePasswordAuthenticationToken(username, null,
-			AuthorityUtils.commaSeparatedStringToAuthorityList(authorities));
-		SecurityContextHolder.getContext().setAuthentication(auth);
-		chain.doFilter(request, response);
-		log.info("Token validated successfully");
 	}
 }
