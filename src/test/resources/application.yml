@@ -9,7 +9,3 @@ spring:
 mongodb:
   product:
     searchIndex: test
-    
-
-    
-  
