@@ -23,6 +23,4 @@ public class CategoryDto extends TimestampLoggingDto {
 		this.id = id;
 		this.name = name;
 	}
-	
-	
 }
