@@ -13,5 +13,9 @@ public class TimestampLoggingDto {
 
 	private String createdDate;
 	
+	private String createdBy;
+	
 	private String updatedDate;
+	
+	private String updatedBy;
 }

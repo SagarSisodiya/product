@@ -1,4 +1,4 @@
-package com.invento.product.controller;
+package com.invento.product.rest;
 
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
@@ -35,7 +35,7 @@ import com.invento.product.exception.ProductNotFoundException;
 import com.invento.product.rest.ProductController;
 import com.invento.product.service.ProductService;
 import com.invento.product.util.TestConstants;
-import com.invento.product.util.TestUtils;
+import com.invento.product.util.ProductTestUtils;
 
 @WebMvcTest(controllers = ProductController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -52,7 +52,7 @@ public class ProductControllerTest {
 	private ProductService productService;
 	
 	@InjectMocks
-	private TestUtils testUtils;
+	private ProductTestUtils testUtils;
 
 	@Test
 	public void testGetProductList() throws Exception {

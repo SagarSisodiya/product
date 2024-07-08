@@ -59,7 +59,7 @@ public class CategoryController {
 	public ResponseEntity<ResponseDto> addCategory(@RequestBody List<CategoryDto> dtos) {
 		
 		categoryService.addCategory(dtos);
-		return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("Categories added successfully."));
+		return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDto("Categories added successfully."));
 	}
 	
 	/**

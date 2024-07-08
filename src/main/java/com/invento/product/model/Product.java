@@ -3,8 +3,6 @@ package com.invento.product.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,9 +12,9 @@ import lombok.Setter;
 @Document
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class Product extends TimestampLogging {
 
 	@Id
@@ -30,7 +28,6 @@ public class Product extends TimestampLogging {
 
 	private String spec;
 	
-	@JsonIgnore
 	private boolean deleted;
 	
 	private String imagename;

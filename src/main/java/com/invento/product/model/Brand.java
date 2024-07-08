@@ -17,7 +17,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class Brand {
+public class Brand extends TimestampLogging {
 
 	@Id
 	private String id;
@@ -25,8 +25,4 @@ public class Brand {
 	private String name;
 	
 	private boolean deleted;
-	
-	public Brand(String name) {
-		this.name = name;
-	}
 }

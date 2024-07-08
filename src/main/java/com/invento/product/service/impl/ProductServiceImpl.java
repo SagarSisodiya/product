@@ -13,6 +13,7 @@ import static com.mongodb.client.model.search.SearchPath.fieldPath;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.logging.log4j.util.Strings;
 import org.bson.Document;
@@ -29,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import com.invento.product.dto.ProductDto;
+import com.invento.product.exception.InvalidRequestException;
 import com.invento.product.exception.ProductNotFoundException;
 import com.invento.product.mapper.ProductMapper;
 import com.invento.product.model.Product;
@@ -141,6 +143,10 @@ public class ProductServiceImpl implements ProductService {
 	public boolean addProduct(ProductDto dto) {
 
 		boolean created = false;
+		
+		if(Objects.isNull(dto)) {
+			throw new InvalidRequestException("Request dto is null");
+		}
 		Product product = productMapper.dtoToProduct(dto);
 		product = productRepo.save(product);
 		if (Strings.isNotBlank(product.getId())) {
@@ -164,7 +170,7 @@ public class ProductServiceImpl implements ProductService {
 
 		Product product = productRepo.findByIdAndDeleted(dto.getId(), false)
 				.orElseThrow(() -> new ProductNotFoundException("No product found with id: " + dto.getId()));
-		product = productMapper.dtoToProduct(dto);
+		product = productMapper.updateDtoToProduct(dto, product.getCreatedDate(), product.getCreatedBy());
 		productRepo.save(product);
 		log.info("Product with id {} updated successfully.");
 	}
