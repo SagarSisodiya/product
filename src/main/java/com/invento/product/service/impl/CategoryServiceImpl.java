@@ -62,9 +62,9 @@ public class CategoryServiceImpl implements CategoryService {
 	public void addCategory(List<CategoryDto> dtos) {
 		
 		if(CollectionUtils.isEmpty(dtos)) {
-			throw new InvalidRequestException("Dto list is empty/null");
+			throw new InvalidRequestException("Dto list is null/empty.");
 		}
-		List<Category> categoryList = categoryMapper.dtoTocategory(dtos);
+		List<Category> categoryList = categoryMapper.dtoToCategory(dtos);
 		categoryRepo.saveAll(categoryList);
 		log.info("Categories saved successfully.");
 	}
@@ -89,7 +89,7 @@ public class CategoryServiceImpl implements CategoryService {
 		}
 		Category category = categoryRepo.findByIdAndDeleted(dto.getId(), false).orElseThrow(
 			() -> new CategoryNotFoundException("Category not found with id: " + dto.getId()));
-		category = categoryMapper.dtoToCategory(dto);
+		category = categoryMapper.updateDtoToCategory(dto, category.getCreatedDate(), category.getCreatedBy());
 		category = categoryRepo.save(category);
 		log.info("Category updated successfully. Category: {}", category);
 	}
@@ -110,7 +110,7 @@ public class CategoryServiceImpl implements CategoryService {
 	public void deleteCategory(String id) {
 		
 		if(Strings.isEmpty(id)) {
-			throw new InvalidRequestException("id is null/empty");
+			throw new InvalidRequestException("id is null/empty.");
 		}
 		Category category = categoryRepo.findByIdAndDeleted(id, false).orElseThrow(
 			() -> new CategoryNotFoundException("Category not found with id: " + id));

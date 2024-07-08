@@ -8,12 +8,19 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BrandDto {
+public class BrandDto extends TimestampLoggingDto {
 
 	private String id;
 	
 	private String name;
+
+	@Builder
+	public BrandDto(String id, String name, String createdDate, 
+		String createdBy, String updatedDate, String updatedBy) {
+		super(createdDate, createdBy, updatedDate, updatedBy);
+		this.id = id;
+		this.name = name;
+	}
 }

@@ -63,7 +63,7 @@ public class BrandServiceImpl implements BrandService {
 		
 		if(CollectionUtils.isEmpty(dtos)) {
 			throw new InvalidRequestException(
-				"RequestDto is not null/empty but received BrandDto list is null/empty");
+				"Dto list is null/empty.");
 		}
 		List<Brand> brandList = brandMapper.dtoToBrand(dtos);
 		brandRepo.saveAll(brandList);
@@ -90,7 +90,7 @@ public class BrandServiceImpl implements BrandService {
 		}
 		Brand brand = brandRepo.findByIdAndDeleted(dto.getId(), false).orElseThrow(
 			() -> new BrandNotFoundException("Brand not found with id: " + dto.getId()));
-		brand = brandMapper.dtoToBrand(dto);
+		brand = brandMapper.updateDtoToBrand(dto, brand.getCreatedDate(), brand.getCreatedBy());
 		brand = brandRepo.save(brand);
 		log.info("Brand updated successfully. Brand: {}", brand);
 	}
@@ -111,7 +111,7 @@ public class BrandServiceImpl implements BrandService {
 	public void deleteBrand(String id) {
 		
 		if(Strings.isEmpty(id)) {
-			throw new InvalidRequestException("id is null/empty");
+			throw new InvalidRequestException("id is null/empty.");
 		}
 		Brand brand = brandRepo.findByIdAndDeleted(id, false).orElseThrow(
 			() -> new BrandNotFoundException("Brand not found with id: " + id));

@@ -15,9 +15,9 @@ import com.invento.product.dto.ProductDto;
 import com.invento.product.model.Product;
 
 @Component
-public class TestUtils {
+public class ProductTestUtils {
 	
-	private static final Logger log = LoggerFactory.getLogger(TestUtils.class);
+	private static final Logger log = LoggerFactory.getLogger(ProductTestUtils.class);
 	
 	private ObjectMapper mapper = new ObjectMapper();
 	
@@ -32,42 +32,6 @@ public class TestUtils {
 				.deleted(false)
 				.imagename("corsaircabzeus.jpg")
 				.build();
-	}
-	
-	public List<ProductDto> getProductDtos() {
-				
-		ProductDto product1 =	
-				ProductDto.builder()
-				.id("6639dd31e5b7490f597ee80f")
-				.category("Cabinet")
-				.brand("Corsair")
-				.productName("Zeus 2000")
-				.spec("Liquid Cooled RGB")
-				.imagename("corsaircabzeus.jpg")
-				.build();
-		
-		ProductDto product2 =	
-				ProductDto.builder()
-				.id("667512965128ae4fdd899203")
-				.category("Cpu")
-				.brand("Intel")
-				.productName("Core i9")
-				.spec("16 Core 24MB cache")
-				.imagename("inteli9.jpg")
-				.build();
-		
-		ProductDto product3 =	
-				ProductDto.builder()
-				.id("667512a2b880f56a1f49b0ba")
-				.category("Hard Drive")
-				.brand("Seagate")
-				.productName("Streamer 4000")
-				.spec("5 TB")
-				.imagename("seagatestreamer.jpg")
-				.build();
-		
-		List<ProductDto> products = Arrays.asList(product1, product2, product3);
-		return products;
 	}
 	
 	public List<Product> getProducts() {
@@ -116,6 +80,42 @@ public class TestUtils {
 				.spec("Liquid Cooled RGB")
 				.imagename("corsaircabzeus.jpg")
 				.build();
+	}
+	
+	public List<ProductDto> getProductDtos() {
+				
+		ProductDto product1 =	
+				ProductDto.builder()
+				.id("6639dd31e5b7490f597ee80f")
+				.category("Cabinet")
+				.brand("Corsair")
+				.productName("Zeus 2000")
+				.spec("Liquid Cooled RGB")
+				.imagename("corsaircabzeus.jpg")
+				.build();
+		
+		ProductDto product2 =	
+				ProductDto.builder()
+				.id("667512965128ae4fdd899203")
+				.category("Cpu")
+				.brand("Intel")
+				.productName("Core i9")
+				.spec("16 Core 24MB cache")
+				.imagename("inteli9.jpg")
+				.build();
+		
+		ProductDto product3 =	
+				ProductDto.builder()
+				.id("667512a2b880f56a1f49b0ba")
+				.category("Hard Drive")
+				.brand("Seagate")
+				.productName("Streamer 4000")
+				.spec("5 TB")
+				.imagename("seagatestreamer.jpg")
+				.build();
+		
+		List<ProductDto> products = Arrays.asList(product1, product2, product3);
+		return products;
 	}
 	
 	public List<Document> getDocuments() {

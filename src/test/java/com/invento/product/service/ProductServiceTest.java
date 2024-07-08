@@ -30,11 +30,11 @@ import com.invento.product.model.Product;
 import com.invento.product.repository.ProductRepo;
 import com.invento.product.service.impl.ProductServiceImpl;
 import com.invento.product.util.TestConstants;
-import com.invento.product.util.TestUtils;
+import com.invento.product.util.ProductTestUtils;
 import com.mongodb.client.MongoCollection;
 
 @ExtendWith(MockitoExtension.class)
-public class ProductServiceTests {
+public class ProductServiceTest {
 
 	@Mock
 	private ProductRepo productRepo;
@@ -52,7 +52,7 @@ public class ProductServiceTests {
 	private ProductServiceImpl productService;
 	
 	@InjectMocks
-	private TestUtils testUtils;
+	private ProductTestUtils testUtils;
 
 	@Test
 	public void testGetProductList() {
@@ -120,14 +120,15 @@ public class ProductServiceTests {
 		
 		when(productRepo.findByIdAndDeleted(Mockito.anyString(), Mockito.anyBoolean()))
 			.thenReturn(Optional.ofNullable(product));
-		when(productMapper.dtoToProduct(Mockito.any(ProductDto.class)))
-			.thenReturn(product);
+		when(productMapper.updateDtoToProduct(Mockito.any(ProductDto.class), 
+			Mockito.any(), Mockito.any())).thenReturn(product);
 				
 		productService.updateProduct(testUtils.getProductDto());
 		
 		verify(productRepo, times(1)).findByIdAndDeleted(
 				Mockito.anyString(), Mockito.anyBoolean());
-		verify(productMapper, times(1)).dtoToProduct(Mockito.any(ProductDto.class));
+		verify(productMapper, times(1)).updateDtoToProduct(Mockito.any(ProductDto.class), 
+				Mockito.any(), Mockito.any());
 		verify(productRepo, times(1)).save(Mockito.any(Product.class));
 	}
 	

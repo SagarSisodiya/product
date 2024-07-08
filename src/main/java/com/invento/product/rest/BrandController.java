@@ -60,7 +60,7 @@ public class BrandController {
 	public ResponseEntity<ResponseDto> addBrand(@RequestBody List<BrandDto> dtos) {
 		
 		brandService.addBrand(dtos);
-		return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("Brands added successfully."));
+		return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDto("Brands added successfully."));
 	}
 	
 	/**

@@ -10,8 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class ProductDto{
+public class ProductDto extends TimestampLoggingDto {
 
 	private String id;
 
@@ -24,4 +23,16 @@ public class ProductDto{
 	private String spec;
 	
 	private String imagename;
+
+	@Builder
+	public ProductDto(String id, String category, String brand, String productName, String spec, String imagename,
+			String createdDate, String createdBy, String updatedDate, String updatedBy) {
+		super(createdDate, createdBy, updatedDate, updatedBy);
+		this.id = id;
+		this.category = category;
+		this.brand = brand;
+		this.productName = productName;
+		this.spec = spec;
+		this.imagename = imagename;
+	}
 }

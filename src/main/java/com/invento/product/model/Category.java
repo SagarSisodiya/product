@@ -17,7 +17,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class Category {
+public class Category extends TimestampLogging {
 
 	@Id
 	private String id;

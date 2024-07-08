@@ -8,12 +8,21 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryDto {
+public class CategoryDto extends TimestampLoggingDto {
 
 	private String id;
 	
 	private String name;
+
+	@Builder
+	public CategoryDto(String id, String name, String createdDate, 
+		String createdBy, String updatedDate, String updatedBy) {
+		super(createdDate, createdBy, updatedDate, updatedBy);
+		this.id = id;
+		this.name = name;
+	}
+	
+	
 }
