@@ -7,6 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.invento.product.dto.ProductDto;
 import com.invento.product.dto.ResponseDto;
-import com.invento.product.model.Product;
 import com.invento.product.service.ProductService;
 import com.invento.product.util.Constants;
 
@@ -48,14 +48,14 @@ public class ProductController {
 	 *         or with status code 404 {NOT FOUND} and body with and empty list.
 	 */
 	@GetMapping("/getProductList")
-	public ResponseEntity<List<Product>> getProductList(
+	public ResponseEntity<List<ProductDto>> getProductList(
 			@RequestParam(defaultValue = Constants.DEFAULT_PAGE_NUMBER_VALUE) int pageNumber,
 			@RequestParam(defaultValue = Constants.DEFAULT_PAGE_SIZE_VALUE) int pageSize,
 			@RequestParam(defaultValue = Constants.DEFAULT_CATEGORY) String field,
       @RequestParam(defaultValue = Constants.DESC) Sort.Direction sortDirection) {
 
-		List<Product> products = productService.getProductList(pageNumber, pageSize, field, sortDirection);
-		return (products.size() > 0) 
+		List<ProductDto> products = productService.getProductList(pageNumber, pageSize, field, sortDirection);
+		return (!CollectionUtils.isEmpty(products)) 
 				? ResponseEntity.status(HttpStatus.OK).body(products)
 				: ResponseEntity.status(HttpStatus.NOT_FOUND).body(products);
 	}
@@ -70,7 +70,7 @@ public class ProductController {
 	 *         if object is not found matching the provided id.
 	 */
 	@GetMapping("/getProductById")
-	public ResponseEntity<Product> getProductById(@RequestParam String id) {
+	public ResponseEntity<ProductDto> getProductById(@RequestParam String id) {
 
 		return ResponseEntity.status(HttpStatus.OK).body(productService.getProductById(id));
 	}

@@ -6,13 +6,12 @@ import org.bson.Document;
 import org.springframework.data.domain.Sort;
 
 import com.invento.product.dto.ProductDto;
-import com.invento.product.model.Product;
 
 public interface ProductService {
 
-	public List<Product> getProductList(int pageNumber, int pageSize, String field, Sort.Direction sortDirection);
+	public List<ProductDto> getProductList(int pageNumber, int pageSize, String field, Sort.Direction sortDirection);
 
-	public Product getProductById(String id);
+	public ProductDto getProductById(String id);
 	
 	public List<Document> searchProduct(String keyword, int limit);
 

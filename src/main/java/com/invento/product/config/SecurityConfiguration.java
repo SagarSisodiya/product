@@ -50,10 +50,12 @@ public class SecurityConfiguration {
 			.addFilterBefore(new JWTTokenValidatorFilter(), UsernamePasswordAuthenticationFilter.class)
 			.authorizeHttpRequests(request -> request
 			.requestMatchers(Constants.SWAGGER_WHITELIST).permitAll()
-			.requestMatchers("/product/addProduct",
-				"/product/updateProduct","/product/delete").hasRole(Constants.ROLE_ADMIN)
-			.requestMatchers("/product/**").hasAnyRole(Constants.ROLE_ADMIN, 
-				Constants.ROLE_READ_ONLY, Constants.ROLE_READ_WRITE))
+			.requestMatchers("/product/addProduct", "/product/updateProduct","/product/delete",
+				"/brand/addBrand", "/brand/updateBrand", "/brand/delete",
+				"/category/addCategory", "/category/updateCategory", "/category/delete")
+			.hasAnyRole(Constants.ROLE_ADMIN, Constants.ROLE_WRITE)
+			.requestMatchers("/product/**", "/brand/**", "/category/**")
+			.hasAnyRole(Constants.ROLE_ADMIN, Constants.ROLE_WRITE, Constants.ROLE_READ))
 			.formLogin(Customizer.withDefaults())
 			.httpBasic(Customizer.withDefaults())
 			.exceptionHandling(ex -> ex.authenticationEntryPoint(authEntryPoint));

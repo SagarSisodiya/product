@@ -32,7 +32,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.invento.product.dto.ProductDto;
 import com.invento.product.exception.ProductNotFoundException;
-import com.invento.product.model.Product;
 import com.invento.product.rest.ProductController;
 import com.invento.product.service.ProductService;
 import com.invento.product.util.TestConstants;
@@ -58,7 +57,7 @@ public class ProductControllerTest {
 	@Test
 	public void testGetProductList() throws Exception {
 		
-		List<Product> products = testUtils.getProducts();
+		List<ProductDto> products = testUtils.getProductDtos();
 		
 		when(productService.getProductList(Mockito.anyInt(), Mockito.anyInt(), 
 				Mockito.anyString(), Mockito.any(Sort.Direction.class)))
@@ -100,7 +99,7 @@ public class ProductControllerTest {
 	@Test
 	public void testGetProductById() throws Exception {
 		
-		Product product = testUtils.getProduct();
+		ProductDto product = testUtils.getProductDto();
 		
 		when(productService.getProductById(Mockito.anyString())).thenReturn(product);
 		

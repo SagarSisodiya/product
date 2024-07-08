@@ -29,7 +29,6 @@ import com.invento.product.mapper.ProductMapper;
 import com.invento.product.model.Product;
 import com.invento.product.repository.ProductRepo;
 import com.invento.product.service.impl.ProductServiceImpl;
-import com.invento.product.util.Constants;
 import com.invento.product.util.TestConstants;
 import com.invento.product.util.TestUtils;
 import com.mongodb.client.MongoCollection;
@@ -63,8 +62,10 @@ public class ProductServiceTests {
 		when(productRepo.findAllByDeleted(Mockito.anyBoolean(), Mockito.any(PageRequest.class)))
 			.thenReturn(productsPage);
 		
-		List<Product> products = 
-			productService.getProductList(0, 5, "category", Sort.Direction.DESC);
+		when(productMapper.productToDto(Mockito.anyList())).thenReturn(testUtils.getProductDtos());
+		
+		List<ProductDto> products = 
+				productService.getProductList(0, 5, "category", Sort.Direction.DESC);
 		
 		Assertions.assertThat(products).isNotEmpty();
 	}
@@ -76,8 +77,10 @@ public class ProductServiceTests {
 		
 		when(productRepo.findByIdAndDeleted(Mockito.anyString(), Mockito.anyBoolean()))
 			.thenReturn(Optional.ofNullable(product));
+		
+		when(productMapper.productToDto(Mockito.any(Product.class))).thenReturn(testUtils.getProductDto());
 					
-		Product productRes = 
+		ProductDto productRes = 
 			productService.getProductById(TestConstants.PRODUCT_ID);
 		
 		Assertions.assertThat(productRes).isNotNull();

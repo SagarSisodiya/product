@@ -13,7 +13,10 @@ import org.springframework.web.client.HttpClientErrorException.BadRequest;
 import org.springframework.web.client.HttpServerErrorException.InternalServerError;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.invento.product.exception.BrandNotFoundException;
+import com.invento.product.exception.CategoryNotFoundException;
 import com.invento.product.exception.ErrorResponse;
+import com.invento.product.exception.InvalidRequestException;
 import com.invento.product.exception.ProductNotFoundException;
 
 @ControllerAdvice
@@ -25,6 +28,33 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	public @ResponseBody ErrorResponse
 	handleException(ProductNotFoundException ex) {
+		
+		log.error(ex.getMessage());
+		return new ErrorResponse(ex.getMessage());
+	}
+	
+	@ExceptionHandler(value = CategoryNotFoundException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	public @ResponseBody ErrorResponse
+	handleException(CategoryNotFoundException ex) {
+		
+		log.error(ex.getMessage());
+		return new ErrorResponse(ex.getMessage());
+	}
+	
+	@ExceptionHandler(value = BrandNotFoundException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	public @ResponseBody ErrorResponse
+	handleException(BrandNotFoundException ex) {
+		
+		log.error(ex.getMessage());
+		return new ErrorResponse(ex.getMessage());
+	}
+	
+	@ExceptionHandler(value = InvalidRequestException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public @ResponseBody ErrorResponse
+	handledException(InvalidRequestException ex) {
 		
 		log.error(ex.getMessage());
 		return new ErrorResponse(ex.getMessage());
@@ -54,6 +84,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	handleException(AuthenticationException ex) {
 		
 		log.error("AuthenticationException. Error: " + ex.getMessage());
+		return new ErrorResponse(ex.getMessage());
+	}
+	
+	@ExceptionHandler(value = Exception.class)
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	public @ResponseBody ErrorResponse
+	handleException(Exception ex) {
+		
+		log.error(ex.getMessage());
 		return new ErrorResponse(ex.getMessage());
 	}
 }
