@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,8 +22,7 @@ import com.invento.product.service.BrandService;
 
 
 @RestController
-@RequestMapping(path="/brand")
-//, produces= {MediaType.APPLICATION_JSON_VALUE})
+@RequestMapping(path="/brand", produces= {MediaType.APPLICATION_JSON_VALUE})
 public class BrandController {
 
 	private BrandService brandService;
