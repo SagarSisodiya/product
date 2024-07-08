@@ -8,20 +8,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class ProductDto{
+public class BrandDto {
 
 	private String id;
-
-	private String category;
-
-	private String brand;
 	
-	private String productName;
-	
-	private String spec;
-	
-	private String imagename;
+	private String name;
 }

@@ -10,8 +10,8 @@ public class Constants {
 	public static final String BEARER = "Bearer";
 	public static final String CSRF_REQUEST_ATTR_NAME = "_csrf";
 	public static final String ROLE_ADMIN = "INVENTO_ADMIN";
-	public static final String ROLE_READ_WRITE = "INVENTO_RW";
-	public static final String ROLE_READ_ONLY = "INVENTO_RO";
+	public static final String ROLE_READ = "INVENTO_READ";
+	public static final String ROLE_WRITE = "INVENTO_WRITE";
 	public static final String ASTERISK = "*";
 	public static final String USERNAME = "username";
 	public static final String AUTHORITIES = "authorities";

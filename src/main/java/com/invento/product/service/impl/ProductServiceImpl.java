@@ -26,6 +26,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import com.invento.product.dto.ProductDto;
 import com.invento.product.exception.ProductNotFoundException;
@@ -73,10 +74,15 @@ public class ProductServiceImpl implements ProductService {
 	 * 
 	 */
 	@Override
-	public List<Product> getProductList(int pageNumber, int pageSize, String field, Sort.Direction sortDirection) {
+	public List<ProductDto> getProductList(int pageNumber, int pageSize, String field, Sort.Direction sortDirection) {
 
+		List<ProductDto> dtos = new ArrayList<>();
 		Pageable pageable = PageRequest.of(pageNumber, pageSize, sortDirection, field);
-		return productRepo.findAllByDeleted(false, pageable).toList();
+		List<Product> products = productRepo.findAllByDeleted(false, pageable).toList();
+		if(!CollectionUtils.isEmpty(products)) {
+			dtos = productMapper.productToDto(products);
+		}
+		return dtos;
 	}
 
 	/**
@@ -87,10 +93,11 @@ public class ProductServiceImpl implements ProductService {
 	 * @return Product object or throws ProductNotFoundException if object is not found matching the provided id.
 	 */
 	@Override
-	public Product getProductById(String id) {
+	public ProductDto getProductById(String id) {
 
-		return productRepo.findByIdAndDeleted(id, false)
+		Product product = productRepo.findByIdAndDeleted(id, false)
 				.orElseThrow(() -> new ProductNotFoundException("No product found with id: " + id));
+		return productMapper.productToDto(product);
 	}
 	
 	/**

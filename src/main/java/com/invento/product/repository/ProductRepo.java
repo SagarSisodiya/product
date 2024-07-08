@@ -14,7 +14,7 @@ import com.invento.product.model.Product;
  */
 
 @Repository
-public interface ProductRepo extends MongoRepository<Product, String>{
+public interface ProductRepo extends MongoRepository<Product, String> {
 
 	Page<Product> findAllByDeleted(boolean b, Pageable page);
 	
