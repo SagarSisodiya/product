@@ -1,4 +1,4 @@
-#Product
+## Product
 
 This application is a microservice and offers apis for all product related operations. It will refuse to launch if it cannot connect to **config-server** (microservice for providing configurations at runtime)
 
